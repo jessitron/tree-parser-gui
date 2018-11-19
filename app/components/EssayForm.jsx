@@ -18,28 +18,28 @@ class EssayForm extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({ code: event.target.value });
   }
 
   handleSubmit(event) {
     console.log('An essay was submitted: ' + this.state.code);
     event.preventDefault();
-    
+
     const data = { code: this.state.code };
-    
-     return fetch('/parse', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify(data), // body data type must match "Content-Type" header
+
+    return fetch('/parse', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
     })
-    .then(response => response.json()) // parses response to JSON
-    .then(j => this.setState({ ...this.state, ast: j.ast }))
-    .catch(error => console.error(error));
-    
+      .then(response => response.json()) // parses response to JSON
+      .then(j => this.setState({ ...this.state, ast: j.ast }))
+      .catch(error => console.error(error));
+
   }
-  
+
   renderTree(tree) {
     return JSON.stringify(tree);
   }
@@ -47,12 +47,12 @@ class EssayForm extends React.Component {
   render() {
     return (
       <div>
-      <div className="essayForm">
-        <form onSubmit={this.handleSubmit}>
-          <div>Code to parse</div>
+        <div className="essayForm">
+          <form onSubmit={this.handleSubmit}>
+            <div>Code to parse</div>
             <textarea value={this.state.code} onChange={this.handleChange} cols={40} rows={10} />
-          <input type="submit" value="Submit" />
-        </form>  
+            <input type="submit" value="Submit" />
+          </form>
         </div>
         <div className="preview">
           <h1>Preview</h1>
@@ -61,7 +61,7 @@ class EssayForm extends React.Component {
       </div>
     );
   }
-  
+
 }
 
 module.exports = EssayForm;
