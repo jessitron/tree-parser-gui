@@ -1,0 +1,37 @@
+.essayForm {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  padding: 20px;
+}
+.essayForm form {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-right: 50px;
+  margin-bottom: 25px;
+    padding: 15px;
+    background-color: #909090;
+    width: 50%;
+    max-width: 1000px;
+    border-radius: 3px;
+}
+.essayForm form * {
+  margin-right: 10px;
+      
+}
+.essayForm h1 {
+  font-size: 20px;
+  font-weight: bold;
+}
+.essayForm .preview {
+  white-space: pre;
+}
+.essayForm input {
+  display: flex;
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    font-size: 16px;
+}
