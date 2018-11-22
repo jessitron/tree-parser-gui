@@ -5,6 +5,8 @@ var Inspector = require('react-json-inspector');
 
 const startingTree = { name: "compilationUnit" };
 
+const availableParsers = ["Java9", "Markdown"];
+
 class EssayForm extends React.Component {
   constructor(props) {
     super(props);
@@ -44,11 +46,26 @@ class EssayForm extends React.Component {
     return JSON.stringify(tree);
   }
 
+  radioInputs(name, valueAndLabelses) {
+    const oneInput = (value, label) => {
+      return <div>
+        <input type="radio" id={value} name={name} value={value}
+          checked />
+        <label for={value}>Huey</label>
+      </div>
+    }
+
+    return valueAndLabelses.map(o => oneInput(o.value, o.label));
+  }
+
   render() {
     return (
       <div>
         <div className="essayForm">
           <form onSubmit={this.handleSubmit}>
+            <div>Choose a parser</div>
+            {this.radioInputs("parserChoice", availableParsers)}
+
             <div>Code to parse</div>
             <textarea value={this.state.code} onChange={this.handleChange} cols={40} rows={10} />
             <input type="submit" value="Submit" />
