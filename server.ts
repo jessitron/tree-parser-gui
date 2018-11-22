@@ -5,6 +5,8 @@ import express from 'express';
 import * as automationClient from '@atomist/automation-client';
 import * as antlr from '@atomist/antlr';
 import { AddressInfo } from 'net';
+import { TreeNode } from '@atomist/tree-path';
+import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 var app = express();
 var pj = require('./package.json');
 
@@ -52,9 +54,22 @@ app.post("/parse", async (req, response) => {
 
   console.log("Received code to parse: " + req.body.code);
 
+  const parser = chooseParser(req.body.parserChoice);
+
   const f = new automationClient.InMemoryProjectFile("src/main/java/Foo.java", req.body.code);
-  const ast = await antlr.JavaFileParser.toAst(f)
+  const ast = await parser.toAst(f)
 
   response.send({ ast: stn(ast) });
 
 });
+
+function chooseParser(choice: string): automationClient.FileParser<TreeNode> {
+  switch (choice) {
+    case "Java9":
+      return antlr.JavaFileParser;
+    case "Markdown":
+      return RemarkFileParser
+    default:
+      throw new Error("Unknown parser: " + choice)
+  }
+}

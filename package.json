@@ -14,6 +14,9 @@
   "dependencies": {
     "@atomist/antlr": "^1.0.1",
     "@atomist/automation-client": "1.0.1",
+    "@atomist/sdm": "^1.0.1",
+    "@atomist/sdm-core": "^1.0.2",
+    "@atomist/sdm-pack-markdown": "^0.1.1",
     "@atomist/tree-path": "1.0.1",
     "express": "^4.16.3",
     "jsx-loader": "^0.13.2",

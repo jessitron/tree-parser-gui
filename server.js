@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const automationClient = __importStar(require("@atomist/automation-client"));
 const antlr = __importStar(require("@atomist/antlr"));
+const sdm_pack_markdown_1 = require("@atomist/sdm-pack-markdown");
 var app = express_1.default();
 var pj = require('./package.json');
 // http://expressjs.com/en/starter/static-files.html
@@ -52,7 +53,18 @@ app.post("/parse", async (req, response) => {
         return;
     }
     console.log("Received code to parse: " + req.body.code);
+    const parser = chooseParser(req.body.parserChoice);
     const f = new automationClient.InMemoryProjectFile("src/main/java/Foo.java", req.body.code);
-    const ast = await antlr.JavaFileParser.toAst(f);
+    const ast = await parser.toAst(f);
     response.send({ ast: stn(ast) });
 });
+function chooseParser(choice) {
+    switch (choice) {
+        case "Java9":
+            return antlr.JavaFileParser;
+        case "Markdown":
+            return sdm_pack_markdown_1.RemarkFileParser;
+        default:
+            throw new Error("Unknown parser: " + choice);
+    }
+}
