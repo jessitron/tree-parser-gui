@@ -1,8 +1,8 @@
-const React = require('react');
-const EssayForm = require('./EssayForm');
+import React from 'react';
+import { EssayForm } from './EssayForm';
 
 /* the main page for the index route of this app */
-class HelloWorld extends React.Component {
+class HelloWorld extends React.Component<{}, { deps: string[] }> {
 
   constructor(props) {
     super(props);

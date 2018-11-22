@@ -1,14 +1,23 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
-const React = require('react');
+import React from 'react';
 var Inspector = require('react-json-inspector');
 
 const startingTree = { name: "compilationUnit" };
 
-const availableParsers = [{ value: "Java9", label: "Java" },
-{ value: "Markdown", label: "Markdown" }];
+enum AvailableParsers {
+  Java9 = "Java9",
+  Markdown = "Markdown",
+}
 
-class EssayForm extends React.Component {
+const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
+{ value: AvailableParsers.Markdown, label: "Markdown" }];
+
+export class EssayForm extends React.Component<{}, {
+  code: string,
+  parserChoice: AvailableParsers,
+  ast: any
+}> {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +26,9 @@ class EssayForm extends React.Component {
       ast: startingTree,
     };
 
-    this.handleChange = this.handleCodeChange.bind(this);
+    // wat
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.handleParserChoiceChange = this.handleParserChoiceChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -51,17 +62,17 @@ class EssayForm extends React.Component {
     return JSON.stringify(tree);
   }
 
-  radioInputs(name, valueAndLabelses, checkedness) {
+  radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <div>
+      return <div key={value}>
         <input type="radio" id={value} name={name} value={value}
-          onChanged={this.handleParserChoiceChange}
-          checked={checkedness} />
-        <label for={value}>{value}</label>
+          onChange={this.handleParserChoiceChange}
+          checked={this.state.parserChoice == value} />
+        <label>{label}</label>
       </div>
     }
 
-    return valueAndLabelses.map((o, i) => oneInput(o.value, o.label, i === 0));
+    return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
   render() {
@@ -86,5 +97,3 @@ class EssayForm extends React.Component {
   }
 
 }
-
-module.exports = EssayForm;

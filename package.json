@@ -23,7 +23,9 @@
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/react": "^16.7.7"
+  },
   "engines": {
     "node": "8.x"
   },

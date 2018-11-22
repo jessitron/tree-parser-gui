@@ -1,7 +1,12 @@
-const React = require('react');
-const EssayForm = require('./EssayForm');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(require("react"));
+const EssayForm_1 = require("./EssayForm");
 /* the main page for the index route of this app */
-class HelloWorld extends React.Component {
+class HelloWorld extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,12 +25,12 @@ class HelloWorld extends React.Component {
         });
     }
     render() {
-        return (React.createElement("div", null,
-            React.createElement("h1", null, "Parse My Code!"),
-            React.createElement("p", null,
+        return (react_1.default.createElement("div", null,
+            react_1.default.createElement("h1", null, "Parse My Code!"),
+            react_1.default.createElement("p", null,
                 "Working with @atomist/antlr version: ",
                 this.state.deps["@atomist/antlr"]),
-            React.createElement(EssayForm, null)));
+            react_1.default.createElement(EssayForm_1.EssayForm, null)));
     }
 }
 module.exports = HelloWorld;
