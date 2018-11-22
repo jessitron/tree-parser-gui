@@ -5,29 +5,35 @@ var Inspector = require('react-json-inspector');
 
 const startingTree = { name: "compilationUnit" };
 
-const availableParsers = ["Java9", "Markdown"];
+const availableParsers = [{ value: "Java9", label: "Java" },
+{ value: "Markdown", label: "Markdown" }];
 
 class EssayForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       code: 'class Foo { }',
+      parserChoice: availableParsers[0].value,
       ast: startingTree,
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChange = this.handleCodeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({ code: event.target.value });
+  handleCodeChange(event) {
+    this.setState({ ...this.state, code: event.target.value });
+  }
+
+  handleParserChoiceChange(event) {
+    this.setState({ ...this.state, parserChoice: event.target.value })
   }
 
   handleSubmit(event) {
     console.log('An essay was submitted: ' + this.state.code);
     event.preventDefault();
 
-    const data = { code: this.state.code };
+    const data = { code: this.state.code, parserChoice: this.state.parserChoice };
 
     return fetch('/parse', {
       method: "POST",
@@ -39,23 +45,23 @@ class EssayForm extends React.Component {
       .then(response => response.json()) // parses response to JSON
       .then(j => this.setState({ ...this.state, ast: j.ast }))
       .catch(error => console.error(error));
-
   }
 
   renderTree(tree) {
     return JSON.stringify(tree);
   }
 
-  radioInputs(name, valueAndLabelses) {
+  radioInputs(name, valueAndLabelses, checkedness) {
     const oneInput = (value, label) => {
       return <div>
         <input type="radio" id={value} name={name} value={value}
-          checked />
-        <label for={value}>Huey</label>
+          onChanged={this.handleParserChoiceChange}
+          checked={checkedness} />
+        <label for={value}>{value}</label>
       </div>
     }
 
-    return valueAndLabelses.map(o => oneInput(o.value, o.label));
+    return valueAndLabelses.map((o, i) => oneInput(o.value, o.label, i === 0));
   }
 
   render() {
@@ -67,7 +73,7 @@ class EssayForm extends React.Component {
             {this.radioInputs("parserChoice", availableParsers)}
 
             <div>Code to parse</div>
-            <textarea value={this.state.code} onChange={this.handleChange} cols={40} rows={10} />
+            <textarea value={this.state.code} onChange={this.handleCodeChange} cols={40} rows={10} />
             <input type="submit" value="Submit" />
           </form>
         </div>
