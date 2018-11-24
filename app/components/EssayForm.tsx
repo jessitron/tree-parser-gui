@@ -64,8 +64,8 @@ export class EssayForm extends React.Component<{}, {
 
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <div key={value}>
-        <input type="radio" id={value} name={name} value={value}
+      return <div className="parserChoice" key={value}>
+        <input className="parserChoice" type="radio" id={value} name={name} value={value}
           onChange={this.handleParserChoiceChange}
           checked={this.state.parserChoice == value} />
         <label>{label}</label>

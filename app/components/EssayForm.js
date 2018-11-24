@@ -53,8 +53,8 @@ class EssayForm extends react_1.default.Component {
     }
     radioInputs(name, valueAndLabelses) {
         const oneInput = (value, label) => {
-            return react_1.default.createElement("div", { key: value },
-                react_1.default.createElement("input", { type: "radio", id: value, name: name, value: value, onChange: this.handleParserChoiceChange, checked: this.state.parserChoice == value }),
+            return react_1.default.createElement("div", { className: "parserChoice", key: value },
+                react_1.default.createElement("input", { className: "parserChoice", type: "radio", id: value, name: name, value: value, onChange: this.handleParserChoiceChange, checked: this.state.parserChoice == value }),
                 react_1.default.createElement("label", null, label));
         };
         return valueAndLabelses.map(o => oneInput(o.value, o.label));

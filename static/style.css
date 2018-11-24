@@ -1,3 +1,14 @@
+
+.parserChoice div {
+  background-color: blanchedalmond;
+  color: red;
+}
+
+.parserChoice input {
+  border: solid 3px black;
+  display: inline;
+}
+
 .essayForm {
   font-family: 'Open Sans', sans-serif;
   display: flex;
