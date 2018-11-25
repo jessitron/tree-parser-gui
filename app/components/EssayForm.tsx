@@ -1,7 +1,7 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-var Inspector = require('react-json-inspector');
+import ReactJson from 'react-json-view';
 
 const startingTree = { name: "compilationUnit" };
 
@@ -90,7 +90,7 @@ export class EssayForm extends React.Component<{}, {
         </div>
         <div className="preview">
           <h1>Preview</h1>
-          <Inspector data={this.state.ast} />
+          <ReactJson src={this.state.ast} />
         </div>
       </div>
     );

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
-var Inspector = require('react-json-inspector');
+const react_json_view_1 = __importDefault(require("react-json-view"));
 const startingTree = { name: "compilationUnit" };
 var AvailableParsers;
 (function (AvailableParsers) {
@@ -70,7 +70,7 @@ class EssayForm extends react_1.default.Component {
                     react_1.default.createElement("input", { type: "submit", value: "Submit" }))),
             react_1.default.createElement("div", { className: "preview" },
                 react_1.default.createElement("h1", null, "Preview"),
-                react_1.default.createElement(Inspector, { data: this.state.ast }))));
+                react_1.default.createElement(react_json_view_1.default, { src: this.state.ast }))));
     }
 }
 exports.EssayForm = EssayForm;
