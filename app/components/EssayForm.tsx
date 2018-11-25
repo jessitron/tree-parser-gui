@@ -90,7 +90,10 @@ export class EssayForm extends React.Component<{}, {
         </div>
         <div className="preview">
           <h1>Preview</h1>
-          <ReactJson src={this.state.ast} />
+          <ReactJson src={this.state.ast}
+            displayDataTypes={false}
+            onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
+          />
         </div>
       </div>
     );

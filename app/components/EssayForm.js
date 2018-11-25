@@ -70,7 +70,7 @@ class EssayForm extends react_1.default.Component {
                     react_1.default.createElement("input", { type: "submit", value: "Submit" }))),
             react_1.default.createElement("div", { className: "preview" },
                 react_1.default.createElement("h1", null, "Preview"),
-                react_1.default.createElement(react_json_view_1.default, { src: this.state.ast }))));
+                react_1.default.createElement(react_json_view_1.default, { src: this.state.ast, displayDataTypes: false, onSelect: (select) => console.log("Selected: " + JSON.stringify(select)) }))));
     }
 }
 exports.EssayForm = EssayForm;
