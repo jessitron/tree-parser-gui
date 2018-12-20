@@ -12,7 +12,7 @@
     "start": "tsc --project . && webpack && node server.js"
   },
   "dependencies": {
-    "@atomist/antlr": "^1.0.1",
+    "@atomist/antlr": "^1.0.2-java9.20181219033844",
     "@atomist/automation-client": "1.0.1",
     "@atomist/sdm": "^1.0.1",
     "@atomist/sdm-core": "^1.0.2",

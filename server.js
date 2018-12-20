@@ -33,10 +33,28 @@ var listener = app.listen(process.env.PORT, function () {
 app.get("/dependencies", (req, res) => {
     res.send(pj.dependencies);
 });
-function stn(tn) {
+function condenseSingleChild(tn) {
+    if (tn.$children && tn.$children.length === 1 && tn.$children[0].$offset === tn.$offset) {
+        const condenseChild = condenseSingleChild(tn.$children[0]);
+        return {
+            $children: condenseChild.$children,
+            $value: tn.$value,
+            $name: `${tn.$name}/${condenseChild.$name}`,
+            $offset: tn.$offset
+        };
+    }
+    return {
+        $children: tn.$children,
+        $name: tn.$name,
+        $offset: tn.$offset,
+        $value: tn.$value,
+    };
+}
+function stn(tn1) {
+    const tn = condenseSingleChild(tn1);
     const children = (tn.$children || []).map(stn);
     return {
-        name: tn.$name,
+        name: `${tn.$offset} ${tn.$name}`,
         children,
         value: children.length > 0 ? undefined : tn.$value
     };
@@ -61,7 +79,7 @@ app.post("/parse", async (req, response) => {
 function chooseParser(choice) {
     switch (choice) {
         case "Java9":
-            return antlr.JavaFileParser;
+            return antlr.Java9FileParser;
         case "Markdown":
             return sdm_pack_markdown_1.RemarkFileParser;
         default:
