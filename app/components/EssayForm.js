@@ -6,6 +6,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const react_json_view_1 = __importDefault(require("react-json-view"));
+const TextField_1 = __importDefault(require("@material-ui/core/TextField"));
+const Button_1 = __importDefault(require("@material-ui/core/Button"));
 const startingTree = { name: "compilationUnit" };
 var AvailableParsers;
 (function (AvailableParsers) {
@@ -18,7 +20,7 @@ class EssayForm extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: 'class Foo { }',
+            code: '',
             parserChoice: availableParsers[0].value,
             ast: startingTree,
         };
@@ -65,9 +67,8 @@ class EssayForm extends react_1.default.Component {
                 react_1.default.createElement("form", { onSubmit: this.handleSubmit },
                     react_1.default.createElement("div", null, "Choose a parser"),
                     this.radioInputs("parserChoice", availableParsers),
-                    react_1.default.createElement("div", null, "Code to parse"),
-                    react_1.default.createElement("textarea", { value: this.state.code, onChange: this.handleCodeChange, cols: 40, rows: 10 }),
-                    react_1.default.createElement("input", { type: "submit", value: "Submit" }))),
+                    react_1.default.createElement(TextField_1.default, { style: { margin: "1em" }, label: "Code To Parse", value: this.state.code, variant: "outlined", onChange: this.handleCodeChange, multiline: true, defaultValue: "DEFAULT CODEY CODEY", rows: 15 }),
+                    react_1.default.createElement(Button_1.default, { style: { margin: "1em" }, variant: "contained", color: "primary", type: "submit" }, "Submit"))),
             react_1.default.createElement("div", { className: "preview" },
                 react_1.default.createElement("h1", null, "Preview"),
                 react_1.default.createElement(react_json_view_1.default, { src: this.state.ast, displayDataTypes: false, onSelect: (select) => console.log("Selected: " + JSON.stringify(select)) }))));

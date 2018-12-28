@@ -2,6 +2,9 @@
 
 import React from 'react';
 import ReactJson from 'react-json-view';
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 const startingTree = { name: "compilationUnit" };
 
@@ -21,7 +24,7 @@ export class EssayForm extends React.Component<{}, {
   constructor(props) {
     super(props);
     this.state = {
-      code: 'class Foo { }',
+      code: '',
       parserChoice: availableParsers[0].value,
       ast: startingTree,
     };
@@ -82,10 +85,24 @@ export class EssayForm extends React.Component<{}, {
           <form onSubmit={this.handleSubmit}>
             <div>Choose a parser</div>
             {this.radioInputs("parserChoice", availableParsers)}
-
-            <div>Code to parse</div>
-            <textarea value={this.state.code} onChange={this.handleCodeChange} cols={40} rows={10} />
-            <input type="submit" value="Submit" />
+            <TextField 
+              style={{margin: "1em"}}
+              label="Code To Parse"
+              value={this.state.code}
+              variant="outlined" 
+              onChange={this.handleCodeChange}
+              multiline
+              defaultValue="DEFAULT CODEY CODEY"
+              rows={15} 
+            />
+            <Button 
+              style={{margin: "1em"}}
+              variant="contained" 
+              color="primary"
+              type="submit"
+            >
+              Submit
+            </Button>
           </form>
         </div>
         <div className="preview">
