@@ -2,9 +2,7 @@
 
 import React from 'react';
 import ReactJson from 'react-json-view';
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
 
 const startingTree = { name: "compilationUnit" };
 
@@ -67,14 +65,8 @@ export class EssayForm extends React.Component<{}, {
 
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <div className="parserChoice" key={value}>
-        <input className="parserChoice" type="radio" id={value} name={name} value={value}
-          onChange={this.handleParserChoiceChange}
-          checked={this.state.parserChoice == value} />
-        <label>{label}</label>
-      </div>
+      return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
     }
-
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
@@ -82,9 +74,18 @@ export class EssayForm extends React.Component<{}, {
     return (
       <div>
         <div className="essayForm">
-          <form onSubmit={this.handleSubmit}>
-            <div>Choose a parser</div>
-            {this.radioInputs("parserChoice", availableParsers)}
+          <form 
+            onSubmit={this.handleSubmit}
+            style={{backgroundColor: "#f0f0f0"}}
+          >
+            <FormControl>
+              <FormLabel component="legend">Choose A Parser</FormLabel>
+                <RadioGroup
+                value={this.state.parserChoice}
+                onChange={this.handleParserChoiceChange}>
+                  {this.radioInputs("parserChoice", availableParsers)}
+                </RadioGroup>
+            </FormControl>
             <TextField 
               style={{margin: "1em"}}
               label="Code To Parse"
