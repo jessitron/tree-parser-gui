@@ -27,10 +27,8 @@ class HelloWorld extends React.Component<{}, { deps: string[] }> {
     return (
       <div>
         <h1>Parse My Code!</h1>
-
-        <p>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
-
         <EssayForm />
+        <p>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
       </div>
     );
   }

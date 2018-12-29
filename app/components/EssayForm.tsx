@@ -26,22 +26,17 @@ export class EssayForm extends React.Component<{}, {
       parserChoice: availableParsers[0].value,
       ast: startingTree,
     };
-
-    // wat
-    this.handleCodeChange = this.handleCodeChange.bind(this);
-    this.handleParserChoiceChange = this.handleParserChoiceChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleCodeChange(event) {
+  handleCodeChange = (event) => {
     this.setState({ ...this.state, code: event.target.value });
   }
 
-  handleParserChoiceChange(event) {
+  handleParserChoiceChange = (event) => {
     this.setState({ ...this.state, parserChoice: event.target.value })
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     console.log('An essay was submitted: ' + this.state.code);
     event.preventDefault();
 
@@ -59,7 +54,7 @@ export class EssayForm extends React.Component<{}, {
       .catch(error => console.error(error));
   }
 
-  renderTree(tree) {
+  renderTree (tree) {
     return JSON.stringify(tree);
   }
 
@@ -72,11 +67,12 @@ export class EssayForm extends React.Component<{}, {
 
   render() {
     return (
-      <div>
-        <div className="essayForm">
+      <div style={{display:"flex"}}>
+        <div className="essayForm"
+          style={{width: "50%"}}>
           <form 
             onSubmit={this.handleSubmit}
-            style={{backgroundColor: "#f0f0f0"}}
+            style={{backgroundColor: "#f0f0f0", width: "100%"}}
           >
             <FormControl>
               <FormLabel component="legend">Choose A Parser</FormLabel>
@@ -87,13 +83,12 @@ export class EssayForm extends React.Component<{}, {
                 </RadioGroup>
             </FormControl>
             <TextField 
-              style={{margin: "1em"}}
+              style={{margin: "1em", width: "100%"}}
               label="Code To Parse"
               value={this.state.code}
               variant="outlined" 
               onChange={this.handleCodeChange}
               multiline
-              defaultValue="DEFAULT CODEY CODEY"
               rows={15} 
             />
             <Button 
@@ -106,9 +101,11 @@ export class EssayForm extends React.Component<{}, {
             </Button>
           </form>
         </div>
-        <div className="preview">
-          <h1>Preview</h1>
-          <ReactJson src={this.state.ast}
+        <div className="preview"
+          style={{width: "50%"}}>
+          <ReactJson 
+            src={this.state.ast}
+            theme="apathy"
             displayDataTypes={false}
             onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
           />
