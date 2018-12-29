@@ -18,6 +18,8 @@
     "@atomist/sdm-core": "^1.0.2",
     "@atomist/sdm-pack-markdown": "^0.1.1",
     "@atomist/tree-path": "1.0.1",
+    "@material-ui/core": "^3.1.0",
+    "@material-ui/icons": "^3.0.1",
     "express": "^4.16.3",
     "jsx-loader": "^0.13.2",
     "react": "^16.2.0",

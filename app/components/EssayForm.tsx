@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactJson from 'react-json-view';
+import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
 
 const startingTree = { name: "compilationUnit" };
 
@@ -21,7 +22,7 @@ export class EssayForm extends React.Component<{}, {
   constructor(props) {
     super(props);
     this.state = {
-      code: 'class Foo { }',
+      code: '',
       parserChoice: availableParsers[0].value,
       ast: startingTree,
     };
@@ -64,14 +65,8 @@ export class EssayForm extends React.Component<{}, {
 
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <div className="parserChoice" key={value}>
-        <input className="parserChoice" type="radio" id={value} name={name} value={value}
-          onChange={this.handleParserChoiceChange}
-          checked={this.state.parserChoice == value} />
-        <label>{label}</label>
-      </div>
+      return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
     }
-
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
@@ -79,13 +74,36 @@ export class EssayForm extends React.Component<{}, {
     return (
       <div>
         <div className="essayForm">
-          <form onSubmit={this.handleSubmit}>
-            <div>Choose a parser</div>
-            {this.radioInputs("parserChoice", availableParsers)}
-
-            <div>Code to parse</div>
-            <textarea value={this.state.code} onChange={this.handleCodeChange} cols={40} rows={10} />
-            <input type="submit" value="Submit" />
+          <form 
+            onSubmit={this.handleSubmit}
+            style={{backgroundColor: "#f0f0f0"}}
+          >
+            <FormControl>
+              <FormLabel component="legend">Choose A Parser</FormLabel>
+                <RadioGroup
+                value={this.state.parserChoice}
+                onChange={this.handleParserChoiceChange}>
+                  {this.radioInputs("parserChoice", availableParsers)}
+                </RadioGroup>
+            </FormControl>
+            <TextField 
+              style={{margin: "1em"}}
+              label="Code To Parse"
+              value={this.state.code}
+              variant="outlined" 
+              onChange={this.handleCodeChange}
+              multiline
+              defaultValue="DEFAULT CODEY CODEY"
+              rows={15} 
+            />
+            <Button 
+              style={{margin: "1em"}}
+              variant="contained" 
+              color="primary"
+              type="submit"
+            >
+              Submit
+            </Button>
           </form>
         </div>
         <div className="preview">

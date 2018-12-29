@@ -6,6 +6,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const react_json_view_1 = __importDefault(require("react-json-view"));
+const core_1 = require("@material-ui/core");
 const startingTree = { name: "compilationUnit" };
 var AvailableParsers;
 (function (AvailableParsers) {
@@ -18,7 +19,7 @@ class EssayForm extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: 'class Foo { }',
+            code: '',
             parserChoice: availableParsers[0].value,
             ast: startingTree,
         };
@@ -53,21 +54,19 @@ class EssayForm extends react_1.default.Component {
     }
     radioInputs(name, valueAndLabelses) {
         const oneInput = (value, label) => {
-            return react_1.default.createElement("div", { className: "parserChoice", key: value },
-                react_1.default.createElement("input", { className: "parserChoice", type: "radio", id: value, name: name, value: value, onChange: this.handleParserChoiceChange, checked: this.state.parserChoice == value }),
-                react_1.default.createElement("label", null, label));
+            return react_1.default.createElement(core_1.FormControlLabel, { value: value, name: name, control: react_1.default.createElement(core_1.Radio, null), label: label });
         };
         return valueAndLabelses.map(o => oneInput(o.value, o.label));
     }
     render() {
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("div", { className: "essayForm" },
-                react_1.default.createElement("form", { onSubmit: this.handleSubmit },
-                    react_1.default.createElement("div", null, "Choose a parser"),
-                    this.radioInputs("parserChoice", availableParsers),
-                    react_1.default.createElement("div", null, "Code to parse"),
-                    react_1.default.createElement("textarea", { value: this.state.code, onChange: this.handleCodeChange, cols: 40, rows: 10 }),
-                    react_1.default.createElement("input", { type: "submit", value: "Submit" }))),
+                react_1.default.createElement("form", { onSubmit: this.handleSubmit, style: { backgroundColor: "#f0f0f0" } },
+                    react_1.default.createElement(core_1.FormControl, null,
+                        react_1.default.createElement(core_1.FormLabel, { component: "legend" }, "Choose A Parser"),
+                        react_1.default.createElement(core_1.RadioGroup, { value: this.state.parserChoice, onChange: this.handleParserChoiceChange }, this.radioInputs("parserChoice", availableParsers))),
+                    react_1.default.createElement(core_1.TextField, { style: { margin: "1em" }, label: "Code To Parse", value: this.state.code, variant: "outlined", onChange: this.handleCodeChange, multiline: true, defaultValue: "DEFAULT CODEY CODEY", rows: 15 }),
+                    react_1.default.createElement(core_1.Button, { style: { margin: "1em" }, variant: "contained", color: "primary", type: "submit" }, "Submit"))),
             react_1.default.createElement("div", { className: "preview" },
                 react_1.default.createElement("h1", null, "Preview"),
                 react_1.default.createElement(react_json_view_1.default, { src: this.state.ast, displayDataTypes: false, onSelect: (select) => console.log("Selected: " + JSON.stringify(select)) }))));
