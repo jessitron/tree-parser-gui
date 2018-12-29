@@ -103,7 +103,6 @@ export class EssayForm extends React.Component<{}, {
         </div>
         <div className="preview"
           style={{width: "50%"}}>
-          <h1>Preview</h1>
           <ReactJson 
             src={this.state.ast}
             theme="apathy"

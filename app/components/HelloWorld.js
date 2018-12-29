@@ -27,10 +27,10 @@ class HelloWorld extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h1", null, "Parse My Code!"),
+            react_1.default.createElement(EssayForm_1.EssayForm, null),
             react_1.default.createElement("p", null,
                 "Working with @atomist/antlr version: ",
-                this.state.deps["@atomist/antlr"]),
-            react_1.default.createElement(EssayForm_1.EssayForm, null)));
+                this.state.deps["@atomist/antlr"])));
     }
 }
 module.exports = HelloWorld;

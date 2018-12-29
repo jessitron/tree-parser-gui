@@ -34,8 +34,11 @@
   font-size: 20px;
   font-weight: bold;
 }
-.essayForm .preview {
-  white-space: pre;
+.preview {
+  padding: 20px;
+}
+.react-json-view {
+  padding: 1em;
 }
 .essayForm input {
   display: flex;

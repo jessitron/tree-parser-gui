@@ -64,7 +64,6 @@ class EssayForm extends react_1.default.Component {
                     react_1.default.createElement(core_1.TextField, { style: { margin: "1em", width: "100%" }, label: "Code To Parse", value: this.state.code, variant: "outlined", onChange: this.handleCodeChange, multiline: true, rows: 15 }),
                     react_1.default.createElement(core_1.Button, { style: { margin: "1em" }, variant: "contained", color: "primary", type: "submit" }, "Submit"))),
             react_1.default.createElement("div", { className: "preview", style: { width: "50%" } },
-                react_1.default.createElement("h1", null, "Preview"),
                 react_1.default.createElement(react_json_view_1.default, { src: this.state.ast, theme: "apathy", displayDataTypes: false, onSelect: (select) => console.log("Selected: " + JSON.stringify(select)) }))));
     }
 }
