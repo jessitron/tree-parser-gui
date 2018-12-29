@@ -5,7 +5,7 @@ the objective is to display, interactively, the tree parsed from various code by
 
 I have to learn some CSS to make it decent though
 
-clone, then 'npm install' and 'npm run start' -- it should tell you what port to hit.
+clone, then 'npm install' and 'npm run build' and 'npm run start' -- it should tell you what port to hit.
 
 select a parser (Java or Markdown), enter some text to parse, and submit. see the tree. thats as far as it is so far.
 
