@@ -1,7 +1,7 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
+import { TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from "@material-ui/core";
 
 // const startingTree = { name: "compilationUnit" };
 
@@ -13,7 +13,7 @@ enum AvailableParsers {
 const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
 { value: AvailableParsers.Markdown, label: "Markdown" }];
 
-export class Submit extends React.Component<{handleCodeSubmit: any}, {
+export class Submit extends React.Component<{ handleCodeSubmit: any }, {
   code: string,
   parserChoice: AvailableParsers,
 }> {
@@ -41,47 +41,45 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
   }
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
+      return <FormControlLabel value={value} name={name} control={<Radio />} label={label} />
     }
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
   render() {
     return (
-      <div style={{width: "50%"}}>
-        <div className="essayForm"
-          style={{width: "100%"}}>
-          <form 
-            onSubmit={this.handleSubmit}
-            style={{backgroundColor: "#f0f0f0", width: "100%"}}
+      <div className="essayForm"
+        style={{ width: "100%" }}>
+        <form
+          onSubmit={this.handleSubmit}
+          style={{ backgroundColor: "#f0f0f0", width: "100%" }}
+        >
+          <FormControl>
+            <FormLabel component="legend">Choose A Parser</FormLabel>
+            <RadioGroup
+              value={this.state.parserChoice}
+              onChange={this.handleParserChoiceChange}>
+              {this.radioInputs("parserChoice", availableParsers)}
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            style={{ margin: "1em", width: "100%" }}
+            label="Code To Parse"
+            value={this.state.code}
+            variant="outlined"
+            onChange={this.handleCodeChange}
+            multiline
+            rows={15}
+          />
+          <Button
+            style={{ margin: "1em" }}
+            variant="contained"
+            color="primary"
+            type="submit"
           >
-            <FormControl>
-              <FormLabel component="legend">Choose A Parser</FormLabel>
-                <RadioGroup
-                value={this.state.parserChoice}
-                onChange={this.handleParserChoiceChange}>
-                  {this.radioInputs("parserChoice", availableParsers)}
-                </RadioGroup>
-            </FormControl>
-            <TextField 
-              style={{margin: "1em", width: "100%"}}
-              label="Code To Parse"
-              value={this.state.code}
-              variant="outlined" 
-              onChange={this.handleCodeChange}
-              multiline
-              rows={15} 
-            />
-            <Button 
-              style={{margin: "1em"}}
-              variant="contained" 
-              color="primary"
-              type="submit"
-            >
-              Submit
+            Submit
             </Button>
-          </form>
-        </div>
+        </form>
       </div>
     );
   }

@@ -57,3 +57,8 @@
     border-radius: 10px;
     box-shadow: -5px 5px 5px darkgoldenrod;
 }
+
+/* the left of the screen: accept entry of code or display the code */
+.code-view {
+   width: 50%;
+}
