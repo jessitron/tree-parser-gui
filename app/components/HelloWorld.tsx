@@ -1,18 +1,19 @@
 import React from 'react';
-import {Submit} from './codeSubmission/submit';
-import {CodeDisplay} from './codeSubmission/codeDisplay';
-import {Tree} from './jsonDisplay/tree';
+import { Submit } from './codeSubmission/submit';
+import { CodeDisplay } from './codeSubmission/codeDisplay';
+import { Tree } from './jsonDisplay/tree';
+import { TalkOutLoud } from './TalkOutLoud';
 
 /* the main page for the index route of this app */
-class HelloWorld extends React.Component<{}, 
-{ 
-  deps: string[],
-  displayCode: boolean,
-  dataToParse: {
-    code: string,
-    parserChoice: string
-  },
- }> {
+class HelloWorld extends React.Component<{},
+  {
+    deps: string[],
+    displayCode: boolean,
+    dataToParse: {
+      code: string,
+      parserChoice: string
+    },
+  }> {
 
   constructor(props) {
     super(props);
@@ -39,27 +40,29 @@ class HelloWorld extends React.Component<{},
   }
   handleCodeSubmit = (data) => {
     console.log("in handleCodeSubmit. data: ", data)
-    this.setState({dataToParse: data})
+    this.setState({ dataToParse: data })
     this.toggleDisplay();
   }
   toggleDisplay() {
-    this.setState({displayCode: !this.state.displayCode});
+    this.setState({ displayCode: !this.state.displayCode });
   }
 
   render() {
+    console.log("rendering hello");
     return (
       <div>
+        <TalkOutLoud everything={this.state}></TalkOutLoud>
         <h1>Parse My Code!</h1>
-        <div style={{display: "flex"}}>
-          {this.state.displayCode ? 
+        <div style={{ display: "flex" }}>
+          {this.state.displayCode ?
             <CodeDisplay
               dataToParse={this.state.dataToParse} /> :
             <Submit
               handleCodeSubmit={this.handleCodeSubmit}
             />
           }
-            <Tree
-              dataToParse={this.state.dataToParse} />
+          <Tree
+            dataToParse={this.state.dataToParse} />
         </div>
         <p>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
       </div>
