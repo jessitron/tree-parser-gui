@@ -3,17 +3,11 @@ import { Submit } from './codeSubmission/submit';
 import { CodeDisplay } from './codeSubmission/codeDisplay';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
+import { TreeParseGUIState } from '../TreeParseGUIState';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
-  {
-    deps: string[],
-    displayCode: boolean,
-    dataToParse: {
-      code: string,
-      parserChoice: string
-    },
-  }> {
+  TreeParseGUIState> {
 
   constructor(props) {
     super(props);
