@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   context: path.join(__dirname, './'),
-  entry: './app/app.jsx',
+  entry: './app/app.js',
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js',
@@ -19,5 +19,5 @@ module.exports = {
         exclude: /node_modules/,
         include: path.join(__dirname, 'app'),
       }]
-    }
+  }
 };

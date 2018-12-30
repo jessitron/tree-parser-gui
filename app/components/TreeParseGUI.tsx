@@ -5,7 +5,7 @@ import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
 
 /* the main page for the index route of this app */
-class HelloWorld extends React.Component<{},
+export class TreeParseGUI extends React.Component<{},
   {
     deps: string[],
     displayCode: boolean,
@@ -69,5 +69,3 @@ class HelloWorld extends React.Component<{},
     );
   }
 }
-
-module.exports = HelloWorld;
