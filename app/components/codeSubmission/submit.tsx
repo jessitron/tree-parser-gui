@@ -1,10 +1,9 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import ReactJson from 'react-json-view';
 import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
 
-const startingTree = { name: "compilationUnit" };
+// const startingTree = { name: "compilationUnit" };
 
 enum AvailableParsers {
   Java9 = "Java9",
@@ -14,17 +13,15 @@ enum AvailableParsers {
 const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
 { value: AvailableParsers.Markdown, label: "Markdown" }];
 
-export class EssayForm extends React.Component<{}, {
+export class Submit extends React.Component<{handleCodeSubmit: any}, {
   code: string,
   parserChoice: AvailableParsers,
-  ast: any
 }> {
   constructor(props) {
     super(props);
     this.state = {
       code: '',
       parserChoice: availableParsers[0].value,
-      ast: startingTree,
     };
   }
 
@@ -37,27 +34,11 @@ export class EssayForm extends React.Component<{}, {
   }
 
   handleSubmit = (event) => {
-    console.log('An essay was submitted: ' + this.state.code);
+    console.log('code was submitted: ' + this.state.code);
     event.preventDefault();
-
     const data = { code: this.state.code, parserChoice: this.state.parserChoice };
-
-    return fetch('/parse', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    })
-      .then(response => response.json()) // parses response to JSON
-      .then(j => this.setState({ ...this.state, ast: j.ast }))
-      .catch(error => console.error(error));
+    this.props.handleCodeSubmit(data);
   }
-
-  renderTree (tree) {
-    return JSON.stringify(tree);
-  }
-
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
       return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
@@ -67,9 +48,9 @@ export class EssayForm extends React.Component<{}, {
 
   render() {
     return (
-      <div style={{display:"flex"}}>
+      <div style={{width: "50%"}}>
         <div className="essayForm"
-          style={{width: "50%"}}>
+          style={{width: "100%"}}>
           <form 
             onSubmit={this.handleSubmit}
             style={{backgroundColor: "#f0f0f0", width: "100%"}}
@@ -100,15 +81,6 @@ export class EssayForm extends React.Component<{}, {
               Submit
             </Button>
           </form>
-        </div>
-        <div className="preview"
-          style={{width: "50%"}}>
-          <ReactJson 
-            src={this.state.ast}
-            theme="apathy"
-            displayDataTypes={false}
-            onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
-          />
         </div>
       </div>
     );
