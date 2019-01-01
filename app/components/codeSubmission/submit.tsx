@@ -48,12 +48,11 @@ export class Submit extends React.Component<{ handleCodeSubmit: any }, {
 
   render() {
     return (
-      <div style={{width: "50%"}}>
+      <div>
         <div className="essayForm"
           style={{width: "100%"}}>
           <form 
             onSubmit={this.handleSubmit}
-            style={{backgroundColor: "#f0f0f0", width: "100%"}}
           >
             <FormControl>
               <FormLabel component="legend">Choose A Parser</FormLabel>
