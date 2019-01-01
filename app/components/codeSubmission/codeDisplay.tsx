@@ -7,6 +7,11 @@ import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/mode/xml/xml.js';
 import 'codemirror/mode/javascript/javascript.js';
 
+enum ParserToMimeType {
+    Java9 = "clike",
+    Markdown = "GFM",
+  }
+
 export class CodeDisplay extends React.Component<{
     dataToParse: {
         code: string, 
@@ -23,15 +28,18 @@ export class CodeDisplay extends React.Component<{
     }
 
     render() {
+    const mimeType = ParserToMimeType[this.props.dataToParse.parserChoice];
     const options = {
       lineNumbers: true,
       readOnly: false,
       autoRefresh: true,
       autoSave: true,
-      mode: 'clike',
+      mode: mimeType,
       theme: 'material'
-    };
+    }
+    
         return(
+            
             <CodeMirror
                 value={this.props.dataToParse.code}
                 options={options}
