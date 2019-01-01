@@ -4,8 +4,7 @@ import 'codemirror/theme/material.css';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/gfm/gfm.js';
-import 'codemirror/mode/xml/xml.js';
-import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/addon/selection/mark-selection.js'
 
 enum ParserToMimeType {
     Java9 = "clike",
@@ -21,11 +20,13 @@ export class CodeDisplay extends React.Component<{
     }, {}> {
     constructor(props) {
       super(props);
+      let cm = null;
     }
 
     updateCode = (newCode) => {
         this.props.handleCodeChange(newCode);
     }
+    
 
     render() {
     const mimeType = ParserToMimeType[this.props.dataToParse.parserChoice];
@@ -41,6 +42,8 @@ export class CodeDisplay extends React.Component<{
         return(
             
             <CodeMirror
+                //@ts-ignore
+                ref={(c: any) => this.cm = c}
                 value={this.props.dataToParse.code}
                 options={options}
                 onBeforeChange={(editor, data, value) => {
