@@ -50,13 +50,9 @@ export class TreeParseGUI extends React.Component<{},
 
         <div style={{ display: "flex" }}>
           <div className="code-view">
-            {this.state.displayCode ?
-              <CodeDisplay
-                dataToParse={this.state.dataToParse} /> :
               <Submit
                 handleCodeSubmit={this.handleCodeSubmit}
               />
-            }
           </div>
           <Tree
             dataToParse={this.state.dataToParse} />

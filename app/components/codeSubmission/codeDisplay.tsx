@@ -1,23 +1,57 @@
 import React from 'react';
+import {Controlled as CodeMirror} from 'react-codemirror2'
+import 'codemirror/theme/material.css';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/clike/clike.js';
+import 'codemirror/mode/gfm/gfm.js';
+import 'codemirror/mode/xml/xml.js';
+import 'codemirror/mode/javascript/javascript.js';
+
+enum ParserToMimeType {
+    Java9 = "clike",
+    Markdown = "GFM",
+  }
 
 export class CodeDisplay extends React.Component<{
     dataToParse: {
-        code: string,
-        parserChoice: string
-    }
-}, {}> {
+        code: string, 
+        parserChoice: string,
+    },
+    handleCodeChange: any
+    }, {}> {
     constructor(props) {
-        super(props);
+      super(props);
     }
+
+    updateCode = (newCode) => {
+        this.props.handleCodeChange(newCode);
+    }
+
     render() {
-        return (
-            <div>
-                <pre>
-                    <code className={`lang-java`}>
-                        {this.props.dataToParse && this.props.dataToParse.code || "Error: no code to display"}
-                    </code>
-                </pre>
-            </div>
+    const mimeType = ParserToMimeType[this.props.dataToParse.parserChoice];
+    const options = {
+      lineNumbers: true,
+      readOnly: false,
+      autoRefresh: true,
+      autoSave: true,
+      mode: mimeType,
+      theme: 'material'
+    }
+    
+        return(
+            
+            <CodeMirror
+                value={this.props.dataToParse.code}
+                options={options}
+                onBeforeChange={(editor, data, value) => {
+                    //@ts-ignore
+                    value=this.updateCode(value)
+                }}
+                onChange={(editor, data, value) => {
+                    // @ts-ignore
+                    value=this.updateCode(value);
+                }}
+            />
         );
     }
 }
