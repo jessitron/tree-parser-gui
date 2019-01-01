@@ -17,7 +17,7 @@ export class CodeDisplay extends React.Component<{
     constructor(props) {
       super(props);
     }
-    
+
     updateCode = (newCode) => {
         this.props.handleCodeChange(newCode);
     }
@@ -32,7 +32,7 @@ export class CodeDisplay extends React.Component<{
       theme: 'material'
     };
         return(
-            <CodeMirror 
+            <CodeMirror
                 value={this.props.dataToParse.code}
                 options={options}
                 onBeforeChange={(editor, data, value) => {

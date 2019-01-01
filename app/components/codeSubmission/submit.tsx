@@ -3,13 +3,6 @@
 import React from 'react';
 import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
 import {CodeDisplay} from './codeDisplay';
-// import CodeMirror from 'codemirror';
-// import 'codemirror/addon/display/autoRefresh'
-// import {Controlled as CodeMirror} from 'react-codemirror2'
-// import 'codemirror/theme/material.css';
-// import 'codemirror/lib/codemirror.css';
-
-// require('codemirror/mode/java/java');
 
 enum AvailableParsers {
   Java9 = "Java9",
@@ -19,7 +12,7 @@ enum AvailableParsers {
 const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
 { value: AvailableParsers.Markdown, label: "Markdown" }];
 
-export class Submit extends React.Component<{handleCodeSubmit: any}, {
+export class Submit extends React.Component<{ handleCodeSubmit: any }, {
   code: string,
   parserChoice: AvailableParsers
 }> {
@@ -30,7 +23,7 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
       parserChoice: availableParsers[0].value,
     };
   }
- 
+
   handleCodeChange = (code) => {
     this.setState({...this.state, code});
   }
@@ -45,10 +38,10 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
     const data = { code: this.state.code, parserChoice: this.state.parserChoice };
     this.props.handleCodeSubmit(data);
   }
-  
+
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
+      return <FormControlLabel value={value} name={name} control={<Radio />} label={label} />
     }
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }

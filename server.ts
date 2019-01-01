@@ -77,7 +77,7 @@ app.post("/parse", async (req, response) => {
   const parser = chooseParser(req.body.parserChoice);
 
   const f = new automationClient.InMemoryProjectFile("src/main/java/Foo.java", req.body.code);
-  const ast = await parser.toAst(f)
+  const ast = await parser.toAst(f);
 
   response.send({ ast: stn(ast) });
 
