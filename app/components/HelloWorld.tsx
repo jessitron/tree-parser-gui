@@ -1,6 +1,5 @@
 import React from 'react';
 import {Submit} from './codeSubmission/submit';
-import {CodeDisplay} from './codeSubmission/codeDisplay';
 import {Tree} from './jsonDisplay/tree';
 
 /* the main page for the index route of this app */
@@ -37,13 +36,10 @@ class HelloWorld extends React.Component<{},
         });
       });
   }
+  
   handleCodeSubmit = (data) => {
     console.log("in handleCodeSubmit. data: ", data)
     this.setState({dataToParse: data})
-    this.toggleDisplay();
-  }
-  toggleDisplay() {
-    this.setState({displayCode: !this.state.displayCode});
   }
 
   render() {
@@ -51,13 +47,9 @@ class HelloWorld extends React.Component<{},
       <div>
         <h1>Parse My Code!</h1>
         <div style={{display: "flex"}}>
-          {this.state.displayCode ? 
-            <CodeDisplay
-              dataToParse={this.state.dataToParse} /> :
             <Submit
               handleCodeSubmit={this.handleCodeSubmit}
             />
-          }
             <Tree
               dataToParse={this.state.dataToParse} />
         </div>

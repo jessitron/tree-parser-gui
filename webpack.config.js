@@ -18,6 +18,11 @@ module.exports = {
         loader: 'jsx-loader',
         exclude: /node_modules/,
         include: path.join(__dirname, 'app'),
-      }]
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
     }
 };

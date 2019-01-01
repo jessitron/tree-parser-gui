@@ -2,8 +2,14 @@
 
 import React from 'react';
 import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
+import {CodeDisplay} from './codeDisplay';
+// import CodeMirror from 'codemirror';
+// import 'codemirror/addon/display/autoRefresh'
+// import {Controlled as CodeMirror} from 'react-codemirror2'
+// import 'codemirror/theme/material.css';
+// import 'codemirror/lib/codemirror.css';
 
-// const startingTree = { name: "compilationUnit" };
+// require('codemirror/mode/java/java');
 
 enum AvailableParsers {
   Java9 = "Java9",
@@ -15,7 +21,7 @@ const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
 
 export class Submit extends React.Component<{handleCodeSubmit: any}, {
   code: string,
-  parserChoice: AvailableParsers,
+  parserChoice: AvailableParsers
 }> {
   constructor(props) {
     super(props);
@@ -24,9 +30,9 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
       parserChoice: availableParsers[0].value,
     };
   }
-
-  handleCodeChange = (event) => {
-    this.setState({ ...this.state, code: event.target.value });
+ 
+  handleCodeChange = (code) => {
+    this.setState({...this.state, code});
   }
 
   handleParserChoiceChange = (event) => {
@@ -39,6 +45,7 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
     const data = { code: this.state.code, parserChoice: this.state.parserChoice };
     this.props.handleCodeSubmit(data);
   }
+  
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
       return <FormControlLabel value={value} name={name} control={<Radio/>} label={label}/>
@@ -63,14 +70,9 @@ export class Submit extends React.Component<{handleCodeSubmit: any}, {
                   {this.radioInputs("parserChoice", availableParsers)}
                 </RadioGroup>
             </FormControl>
-            <TextField 
-              style={{margin: "1em", width: "100%"}}
-              label="Code To Parse"
-              value={this.state.code}
-              variant="outlined" 
-              onChange={this.handleCodeChange}
-              multiline
-              rows={15} 
+            <CodeDisplay
+              dataToParse={{ code: this.state.code, parserChoice: this.state.parserChoice }}
+              handleCodeChange={this.handleCodeChange}
             />
             <Button 
               style={{margin: "1em"}}
