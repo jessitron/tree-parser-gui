@@ -1,7 +1,7 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import {TextField, Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
+import {Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
 import {CodeDisplay} from './codeDisplay';
 
 enum AvailableParsers {
@@ -12,7 +12,7 @@ enum AvailableParsers {
 const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
 { value: AvailableParsers.Markdown, label: "Markdown" }];
 
-export class Submit extends React.Component<{ handleCodeSubmit: any }, {
+export class Submit extends React.Component<{ handleCodeSubmit: any, setSelectedWordsAndRanges: any }, {
   code: string,
   parserChoice: AvailableParsers
 }> {
@@ -37,6 +37,16 @@ export class Submit extends React.Component<{ handleCodeSubmit: any }, {
     event.preventDefault();
     const data = { code: this.state.code, parserChoice: this.state.parserChoice };
     this.props.handleCodeSubmit(data);
+  }
+
+  //this lifts words and their ranges (line numbers and beginning/ending characters)
+  getSelectedWordsAndRanges = (cm, ranges) => {
+    const words = cm.editor.doc.getSelections()
+    this.props.setSelectedWordsAndRanges(words, ranges)
+  }
+
+  hasRange(ranges) {
+      return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line)
   }
 
   radioInputs(name, valueAndLabelses) {
@@ -65,6 +75,7 @@ export class Submit extends React.Component<{ handleCodeSubmit: any }, {
             <CodeDisplay
               dataToParse={{ code: this.state.code, parserChoice: this.state.parserChoice }}
               handleCodeChange={this.handleCodeChange}
+              getSelectedWordsAndRanges={this.getSelectedWordsAndRanges}
             />
             <Button 
               style={{margin: "1em"}}
