@@ -13,6 +13,8 @@ export class TreeParseGUI extends React.Component<{},
     super(props);
     this.state = {
       deps: [],
+      selectedWords: [],
+      selectedRanges: [],
       displayCode: false,
       dataToParse: {
         code: "",
@@ -40,6 +42,10 @@ export class TreeParseGUI extends React.Component<{},
   toggleDisplay() {
     this.setState({ displayCode: !this.state.displayCode });
   }
+setSelectedWordsAndRanges = (words, ranges) => {
+  this.setState({selectedWords: words, selectedRanges: ranges})
+  console.log("in tree parserGUI component: ", words, ranges)
+};
 
   render() {
     console.log("rendering hello");
@@ -52,6 +58,7 @@ export class TreeParseGUI extends React.Component<{},
           <div className="code-view">
               <Submit
                 handleCodeSubmit={this.handleCodeSubmit}
+                setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
               />
           </div>
           <Tree
