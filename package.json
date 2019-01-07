@@ -12,12 +12,7 @@
     "start": "tsc --project . && webpack && node server.js"
   },
   "dependencies": {
-    "@atomist/antlr": "^1.0.2-java9.20181219033844",
-    "@atomist/automation-client": "1.0.1",
-    "@atomist/sdm": "^1.0.1",
-    "@atomist/sdm-core": "^1.0.2",
-    "@atomist/sdm-pack-markdown": "^0.1.1",
-    "@atomist/tree-path": "1.0.1",
+    "@atomist/microgrammar": "^1.0.1",
     "@material-ui/core": "^3.1.0",
     "@types/codemirror": "0.0.71",
     "ajv": "^6.6.2",
@@ -31,6 +26,7 @@
     "style-loader": "^0.23.1"
   },
   "devDependencies": {
+    "@types/node": "^10.12.18",
     "@types/react": "^16.7.7",
     "css-loader": "^2.1.0",
     "typescript": "^3.2.2",
