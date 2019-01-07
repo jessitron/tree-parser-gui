@@ -1,26 +1,23 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import { Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from "@material-ui/core";
+import { Button, Radio, FormControlLabel } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
 
-enum AvailableParsers {
-  Java9 = "Java9",
-  Markdown = "Markdown",
+export type SubmitState = {
+  code: string,
+  microgrammarString: string,
 }
 
-const availableParsers = [{ value: AvailableParsers.Java9, label: "Java" },
-{ value: AvailableParsers.Markdown, label: "Markdown" }];
-
-export class Submit extends React.Component<{ handleCodeSubmit: any, setSelectedWordsAndRanges: any }, {
-  code: string,
-  parserChoice: AvailableParsers
-}> {
+export class Submit extends React.Component<{
+  handleCodeSubmit: any,
+  setSelectedWordsAndRanges: any
+}, SubmitState> {
   constructor(props) {
     super(props);
     this.state = {
       code: '',
-      parserChoice: availableParsers[0].value,
+      microgrammarString: "<$first><$second>",
     };
   }
 
@@ -28,14 +25,14 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
     this.setState({ ...this.state, code });
   }
 
-  handleParserChoiceChange = (event) => {
-    this.setState({ ...this.state, parserChoice: event.target.value })
+  handleMicrogrammarChange = (microgrammarString) => {
+    this.setState({ ...this.state, microgrammarString })
   }
 
   handleSubmit = (event) => {
     console.log('code was submitted: ' + this.state.code);
     event.preventDefault();
-    const data = { code: this.state.code, parserChoice: this.state.parserChoice };
+    const data = { code: this.state.code };
     this.props.handleCodeSubmit(data);
   }
 
@@ -64,10 +61,15 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
           <form
             onSubmit={this.handleSubmit}
           >
+            Microgrammar:
             <CodeDisplay
-              dataToParse={{ code: this.state.code, parserChoice: this.state.parserChoice }}
+              dataToParse={{ code: this.state.microgrammarString }}
+              handleCodeChange={this.handleMicrogrammarChange}
+            />
+            Parse This:
+            <CodeDisplay
+              dataToParse={{ code: this.state.code }}
               handleCodeChange={this.handleCodeChange}
-              getSelectedWordsAndRanges={this.getSelectedWordsAndRanges}
             />
             <Button
               style={{ margin: "1em" }}
