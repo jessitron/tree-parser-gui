@@ -1,8 +1,8 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import {Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel} from "@material-ui/core";
-import {CodeDisplay} from './codeDisplay';
+import { Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from "@material-ui/core";
+import { CodeDisplay } from './codeDisplay';
 
 enum AvailableParsers {
   Java9 = "Java9",
@@ -25,7 +25,7 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
   }
 
   handleCodeChange = (code) => {
-    this.setState({...this.state, code});
+    this.setState({ ...this.state, code });
   }
 
   handleParserChoiceChange = (event) => {
@@ -46,7 +46,7 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
   }
 
   hasRange(ranges) {
-      return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line)
+    return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line)
   }
 
   radioInputs(name, valueAndLabelses) {
@@ -60,26 +60,18 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
     return (
       <div>
         <div className="essayForm"
-          style={{width: "100%"}}>
-          <form 
+          style={{ width: "100%" }}>
+          <form
             onSubmit={this.handleSubmit}
           >
-            <FormControl>
-              <FormLabel component="legend">Choose A Parser</FormLabel>
-                <RadioGroup
-                value={this.state.parserChoice}
-                onChange={this.handleParserChoiceChange}>
-                  {this.radioInputs("parserChoice", availableParsers)}
-                </RadioGroup>
-            </FormControl>
             <CodeDisplay
               dataToParse={{ code: this.state.code, parserChoice: this.state.parserChoice }}
               handleCodeChange={this.handleCodeChange}
               getSelectedWordsAndRanges={this.getSelectedWordsAndRanges}
             />
-            <Button 
-              style={{margin: "1em"}}
-              variant="contained" 
+            <Button
+              style={{ margin: "1em" }}
+              variant="contained"
               color="primary"
               type="submit"
             >
