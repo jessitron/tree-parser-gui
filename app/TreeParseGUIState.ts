@@ -1,10 +1,12 @@
+import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
+
 export type DataToParse = {
     code: string,
     microgrammarString: string,
 }
 
 
-export type AST = object;
+export type AST = PatternMatch[];
 
 export type TreeParseGUIState =
     {
@@ -13,5 +15,5 @@ export type TreeParseGUIState =
         selectedRanges: object[],
         displayCode: boolean,
         dataToParse: DataToParse,
-        ast: object
+        ast: AST
     }

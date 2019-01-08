@@ -5,7 +5,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/addon/selection/mark-selection.js'
-import { HighlightFunction } from './highlightCode';
+import { HighlightFunction, areWeDone } from './highlightCode';
 import { StringStream } from 'codemirror';
 
 export type CodeDisplayProps = {
@@ -45,7 +45,7 @@ export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRan
             readOnly: false,
             autoRefresh: true,
             autoSave: true,
-            mode: "yourMicrogrammar",
+            mode: this.props.highlightFn ? "text/plain" : "yourMicrogrammar",
             theme: 'material'
         }
 
@@ -81,14 +81,24 @@ function customMode(className: string, highlightFn?: HighlightFunction): IDefine
         console.log("Returning plain microgrammar for " + className);
         return plainMode;
     }
+    console.log("Returning special customMode for " + className);
     return {
         name: "yourMicrogrammar",
         fn: () => {
             return {
                 token: (stream: StringStream) => {
                     console.log("pos:" + JSON.stringify(stream.pos));
-                    stream.eatWhile(() => true);
-                    return "highlight1";
+                    const highlightAdvice = highlightFn(stream.pos);
+
+                    if (areWeDone(highlightAdvice)) {
+                        stream.eatWhile(() => true);
+                        return null;
+                    }
+                    // advance the specified number of characters
+                    for (let i = 0; i < highlightAdvice.eatChars; i++) {
+                        stream.next();
+                    }
+                    return highlightAdvice.className;
                 }
             }
         }
@@ -96,7 +106,7 @@ function customMode(className: string, highlightFn?: HighlightFunction): IDefine
 }
 
 const plainMode: IDefineModeOptions = {
-    name: "yourMicrogrammar",
+    name: "plain",
     fn: () => {
         return {
             token: (stream) => { stream.eatWhile(() => true); return null; }

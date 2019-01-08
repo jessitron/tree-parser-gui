@@ -21,7 +21,7 @@ export class TreeParseGUI extends React.Component<{},
         code: "",
         microgrammarString: "<${first}><${second}>",
       },
-      ast: {},
+      ast: [],
     }
   }
 
@@ -58,7 +58,7 @@ export class TreeParseGUI extends React.Component<{},
           <div className="code-view">
             <Submit
               handleCodeSubmit={this.handleCodeSubmit}
-              highlightFn={highlightFn(this.state.ast)}
+              highlightFn={this.state.ast.length > 0 ? highlightFn(this.state.ast) : undefined}
               setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
             />
           </div>

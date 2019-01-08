@@ -83,3 +83,7 @@
   background-color: darkgoldenrod;
   color: red;
 }
+
+.cm-match {
+  text-decoration: underline overline darkgoldenrod;
+}
