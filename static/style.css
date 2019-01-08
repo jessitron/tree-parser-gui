@@ -78,3 +78,8 @@
 .CodeMirror {
   height: 100%;
 }
+
+.cm-highlight1 {
+  background-color: darkgoldenrod;
+  color: red;
+}

@@ -56,7 +56,7 @@ app.post("/parse", async (req, response) => {
   });
   const ast = mg.findMatches(content);
 
-  console.log("The microgrammar is: " + JSON.stringify(mg, null, 2));
+  //console.log("The microgrammar is: " + JSON.stringify(mg, null, 2));
 
   response.send({ ast });
 

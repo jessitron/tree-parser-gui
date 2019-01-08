@@ -4,6 +4,7 @@ import { CodeDisplay } from './codeSubmission/codeDisplay';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
 import { TreeParseGUIState, DataToParse, AST } from '../TreeParseGUIState';
+import { highlightFn } from './codeSubmission/highlightCode';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -57,6 +58,7 @@ export class TreeParseGUI extends React.Component<{},
           <div className="code-view">
             <Submit
               handleCodeSubmit={this.handleCodeSubmit}
+              highlightFn={highlightFn(this.state.ast)}
               setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
             />
           </div>

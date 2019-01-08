@@ -4,16 +4,21 @@ import React from 'react';
 import { Button, Radio, FormControlLabel } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
 import { DataToParse } from '../../TreeParseGUIState';
+import { HighlightFunction } from './highlightCode';
+
+
+export type SubmitProps = {
+  highlightFn: HighlightFunction,
+  handleCodeSubmit: (dtp: DataToParse) => void,
+  setSelectedWordsAndRanges: any
+}
 
 export type SubmitState = {
   code: string,
   microgrammarString: string,
 }
 
-export class Submit extends React.Component<{
-  handleCodeSubmit: (dtp: DataToParse) => void,
-  setSelectedWordsAndRanges: any
-}, SubmitState> {
+export class Submit extends React.Component<SubmitProps, SubmitState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,12 +69,15 @@ export class Submit extends React.Component<{
           >
             Microgrammar:
             <CodeDisplay
+              key="microgrammarInput"
               dataToParse={{ code: this.state.microgrammarString }}
               handleCodeChange={this.handleMicrogrammarChange}
               className="microgrammarInput"
             />
             Parse This:
             <CodeDisplay
+              key="parseThisInput"
+              highlightFn={this.props.highlightFn}
               className="parseThisInput"
               dataToParse={{ code: this.state.code }}
               handleCodeChange={this.handleCodeChange}

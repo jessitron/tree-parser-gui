@@ -5,16 +5,22 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/addon/selection/mark-selection.js'
+import { HighlightFunction } from './highlightCode';
+import { StringStream } from 'codemirror';
 
-export class CodeDisplay extends React.Component<{
+export type CodeDisplayProps = {
     dataToParse: {
         code: string,
     },
     className?: string,
-    handleCodeChange: any
-}, { selectedRanges: any }> {
+    handleCodeChange: any,
+    highlightFn?: HighlightFunction
+}
+
+export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRanges: any }> {
     constructor(props) {
         super(props);
+        console.log("I am a code display with class " + props.className)
         this.state = {
             selectedRanges: null
         }
@@ -39,18 +45,11 @@ export class CodeDisplay extends React.Component<{
             readOnly: false,
             autoRefresh: true,
             autoSave: true,
-            mode: "text/plain",
+            mode: "yourMicrogrammar",
             theme: 'material'
         }
 
-        const plainMode: IDefineModeOptions = {
-            name: "text",
-            fn: () => {
-                return {
-                    token: () => { return null; }
-                }
-            }
-        };
+
 
         return (
             <CodeMirror
@@ -59,7 +58,7 @@ export class CodeDisplay extends React.Component<{
                 ref={(c: any) => this.cm = c}
                 value={this.props.dataToParse.code}
                 options={options}
-                //   defineMode={plainMode}
+                defineMode={customMode(this.props.className, this.props.highlightFn)}
                 onBeforeChange={(editor, data, value) => {
                     //@ts-ignore
                     value = this.updateCode(value)
@@ -76,3 +75,31 @@ export class CodeDisplay extends React.Component<{
         );
     }
 }
+
+function customMode(className: string, highlightFn?: HighlightFunction): IDefineModeOptions {
+    if (!highlightFn) {
+        console.log("Returning plain microgrammar for " + className);
+        return plainMode;
+    }
+    return {
+        name: "yourMicrogrammar",
+        fn: () => {
+            return {
+                token: (stream: StringStream) => {
+                    console.log("pos:" + JSON.stringify(stream.pos));
+                    stream.eatWhile(() => true);
+                    return "highlight1";
+                }
+            }
+        }
+    }
+}
+
+const plainMode: IDefineModeOptions = {
+    name: "yourMicrogrammar",
+    fn: () => {
+        return {
+            token: (stream) => { stream.eatWhile(() => true); return null; }
+        }
+    }
+};
