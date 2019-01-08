@@ -10,6 +10,7 @@ export class CodeDisplay extends React.Component<{
     dataToParse: {
         code: string,
     },
+    className?: string,
     handleCodeChange: any
 }, { selectedRanges: any }> {
     constructor(props) {
@@ -53,6 +54,7 @@ export class CodeDisplay extends React.Component<{
 
         return (
             <CodeMirror
+                className={this.props.className}
                 //@ts-ignore
                 ref={(c: any) => this.cm = c}
                 value={this.props.dataToParse.code}

@@ -65,9 +65,11 @@ export class Submit extends React.Component<{
             <CodeDisplay
               dataToParse={{ code: this.state.microgrammarString }}
               handleCodeChange={this.handleMicrogrammarChange}
+              className="microgrammarInput"
             />
             Parse This:
             <CodeDisplay
+              className="parseThisInput"
               dataToParse={{ code: this.state.code }}
               handleCodeChange={this.handleCodeChange}
             />
