@@ -3,7 +3,7 @@ import { Submit } from './codeSubmission/submit';
 import { CodeDisplay } from './codeSubmission/codeDisplay';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
-import { TreeParseGUIState } from '../TreeParseGUIState';
+import { TreeParseGUIState, DataToParse } from '../TreeParseGUIState';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -18,7 +18,7 @@ export class TreeParseGUI extends React.Component<{},
       displayCode: false,
       dataToParse: {
         code: "",
-        parserChoice: ""
+        microgrammarString: "<${first}><${second}>",
       },
     }
   }
@@ -34,18 +34,15 @@ export class TreeParseGUI extends React.Component<{},
         });
       });
   }
-  handleCodeSubmit = (data) => {
+  handleCodeSubmit = (data: DataToParse) => {
     console.log("in handleCodeSubmit. data: ", data)
     this.setState({ dataToParse: data })
-    this.toggleDisplay();
   }
-  toggleDisplay() {
-    this.setState({ displayCode: !this.state.displayCode });
-  }
-setSelectedWordsAndRanges = (words, ranges) => {
-  this.setState({selectedWords: words, selectedRanges: ranges})
-  console.log("in tree parserGUI component: ", words, ranges)
-};
+
+  setSelectedWordsAndRanges = (words, ranges) => {
+    this.setState({ selectedWords: words, selectedRanges: ranges })
+    console.log("in tree parserGUI component: ", words, ranges)
+  };
 
   render() {
     console.log("rendering hello");
@@ -56,10 +53,10 @@ setSelectedWordsAndRanges = (words, ranges) => {
 
         <div style={{ display: "flex" }}>
           <div className="code-view">
-              <Submit
-                handleCodeSubmit={this.handleCodeSubmit}
-                setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
-              />
+            <Submit
+              handleCodeSubmit={this.handleCodeSubmit}
+              setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
+            />
           </div>
           <Tree
             dataToParse={this.state.dataToParse} />

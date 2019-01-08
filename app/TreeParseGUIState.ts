@@ -1,11 +1,13 @@
+export type DataToParse = {
+    code: string,
+    microgrammarString: string,
+}
+
 export type TreeParseGUIState =
     {
         deps: string[],
         selectedWords: string[],
         selectedRanges: object[],
         displayCode: boolean,
-        dataToParse: {
-            code: string,
-            parserChoice: string
-        },
+        dataToParse: DataToParse,
     }

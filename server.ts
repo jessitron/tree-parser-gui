@@ -7,6 +7,8 @@ var app = express();
 var pj = require('./package.json');
 import { Microgrammar } from "@atomist/microgrammar";
 
+import * as stringifyTree from "stringify-tree";
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('static'));
 app.use(express.static('public'));
@@ -42,16 +44,19 @@ app.post("/parse", async (req, response) => {
 
   console.log("Received code to parse: " + req.body.code);
   const content = req.body.code;
+  const mgString = req.body.microgrammarString;
+  console.log("Received mg string: " + mgString);
 
-  const element = Microgrammar.fromString("<${namex}>", {
-    namex: /[a-zA-Z0-9]+/,
-  });
-  const mg = Microgrammar.fromString("${first}${second}", {
-    first: element,
-    second: element,
+  // const element = Microgrammar.fromString("<${namex}>", {
+  //   namex: /[a-zA-Z0-9]+/,
+  // });
+  const mg = Microgrammar.fromString(mgString, {
+    first: /[a-zA-Z0-9]+/,
+    second: /[a-zA-Z0-9]+/,
   });
   const ast = mg.findMatches(content);
 
+  console.log("The microgrammar is: " + JSON.stringify(mg, null, 2));
 
   response.send({ ast });
 

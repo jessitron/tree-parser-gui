@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Radio, FormControlLabel } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
+import { DataToParse } from '../../TreeParseGUIState';
 
 export type SubmitState = {
   code: string,
@@ -10,14 +11,14 @@ export type SubmitState = {
 }
 
 export class Submit extends React.Component<{
-  handleCodeSubmit: any,
+  handleCodeSubmit: (dtp: DataToParse) => void,
   setSelectedWordsAndRanges: any
 }, SubmitState> {
   constructor(props) {
     super(props);
     this.state = {
-      code: '',
-      microgrammarString: "<$first><$second>",
+      code: "blah<other><thing>blah",
+      microgrammarString: "<${first}><${second}>",
     };
   }
 
@@ -32,7 +33,7 @@ export class Submit extends React.Component<{
   handleSubmit = (event) => {
     console.log('code was submitted: ' + this.state.code);
     event.preventDefault();
-    const data = { code: this.state.code };
+    const data = { code: this.state.code, microgrammarString: this.state.microgrammarString };
     this.props.handleCodeSubmit(data);
   }
 

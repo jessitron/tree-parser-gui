@@ -23,6 +23,7 @@
     "react-codemirror2": "^5.1.0",
     "react-dom": "^16.2.0",
     "react-json-view": "^1.19.1",
+    "stringify-tree": "^1.0.1",
     "style-loader": "^0.23.1"
   },
   "devDependencies": {
