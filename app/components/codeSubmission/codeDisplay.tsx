@@ -45,7 +45,7 @@ export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRan
             readOnly: false,
             autoRefresh: true,
             autoSave: true,
-            mode: this.props.highlightFn ? "text/plain" : "yourMicrogrammar",
+            mode: this.props.highlightFn ? "yourMicrogrammar" : "text/plain",
             theme: 'material'
         }
 
@@ -91,10 +91,12 @@ function customMode(className: string, highlightFn?: HighlightFunction): IDefine
                     const highlightAdvice = highlightFn(stream.pos);
 
                     if (areWeDone(highlightAdvice)) {
+                        console.log("Eating everything")
                         stream.eatWhile(() => true);
                         return null;
                     }
                     // advance the specified number of characters
+                    console.log("Eating so many: " + highlightAdvice.eatChars)
                     for (let i = 0; i < highlightAdvice.eatChars; i++) {
                         stream.next();
                     }
