@@ -3,6 +3,9 @@ export type DataToParse = {
     microgrammarString: string,
 }
 
+
+export type AST = object;
+
 export type TreeParseGUIState =
     {
         deps: string[],
@@ -10,4 +13,5 @@ export type TreeParseGUIState =
         selectedRanges: object[],
         displayCode: boolean,
         dataToParse: DataToParse,
+        ast: object
     }

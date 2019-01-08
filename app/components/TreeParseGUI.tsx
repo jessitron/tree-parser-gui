@@ -3,7 +3,7 @@ import { Submit } from './codeSubmission/submit';
 import { CodeDisplay } from './codeSubmission/codeDisplay';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
-import { TreeParseGUIState, DataToParse } from '../TreeParseGUIState';
+import { TreeParseGUIState, DataToParse, AST } from '../TreeParseGUIState';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -20,6 +20,7 @@ export class TreeParseGUI extends React.Component<{},
         code: "",
         microgrammarString: "<${first}><${second}>",
       },
+      ast: {},
     }
   }
 
@@ -34,9 +35,10 @@ export class TreeParseGUI extends React.Component<{},
         });
       });
   }
-  handleCodeSubmit = (data: DataToParse) => {
-    console.log("in handleCodeSubmit. data: ", data)
-    this.setState({ dataToParse: data })
+
+  handleCodeSubmit = async (data: DataToParse) => {
+    console.log("in handleCodeSubmit. data: ", data);
+    this.setState({ dataToParse: data, ast: await getTree(data) });
   }
 
   setSelectedWordsAndRanges = (words, ranges) => {
@@ -59,10 +61,23 @@ export class TreeParseGUI extends React.Component<{},
             />
           </div>
           <Tree
-            dataToParse={this.state.dataToParse} />
+            ast={this.state.ast} />
         </div>
         <p>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
       </div>
     );
   }
+}
+
+
+async function getTree(dataToParse: DataToParse) {
+  const response = await fetch('/parse', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify(dataToParse), // body data type must match "Content-Type" header
+  });
+  const json = await response.json();
+  return json.ast as AST;
 }
