@@ -4,6 +4,7 @@ import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
 import { TreeParseGUIState, DataToParse, AST } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
+import { stringify } from 'querystring';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -17,7 +18,7 @@ export class TreeParseGUI extends React.Component<{},
       selectedRanges: [],
       displayCode: false,
       dataToParse: {
-        code: "",
+        code: "blah<other><thing> haha",
         microgrammarString: "<${first}><${second}>",
       },
       ast: [],
@@ -36,9 +37,12 @@ export class TreeParseGUI extends React.Component<{},
       });
   }
 
-  handleCodeSubmit = async (data: DataToParse) => {
+  handleCodeSubmit = async (data: Partial<DataToParse>) => {
     console.log("in handleCodeSubmit. data: ", data);
-    this.setState({ dataToParse: data, ast: await getTree(data) });
+    const full: DataToParse = { ... this.state.dataToParse, ...data }
+    this.setState(s => ({ dataToParse: { ...s.dataToParse, ...data }, ast: [] }))
+    const newAst = await getTree(full);
+    this.setState({ast: newAst })
   }
 
   highlightFn: HighlightFunction = (offset: number) => highlightFromAst(this.state.ast, offset);
@@ -58,7 +62,8 @@ export class TreeParseGUI extends React.Component<{},
         <div style={{ display: "flex" }}>
           <div className="code-view">
             <Submit
-              handleCodeSubmit={this.handleCodeSubmit}
+              dataToParse={this.state.dataToParse}
+              dataToParseUpdateFn={this.handleCodeSubmit}
               highlightFn={this.highlightFn}
               setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
             />

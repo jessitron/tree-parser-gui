@@ -8,38 +8,28 @@ import { HighlightFunction } from './highlightCode';
 
 
 export type SubmitProps = {
+  dataToParse: DataToParse,
   highlightFn: HighlightFunction,
-  handleCodeSubmit: (dtp: DataToParse) => void,
+  dataToParseUpdateFn: (dtp: Partial<DataToParse>) => Promise<void>,
   setSelectedWordsAndRanges: any
 }
 
-export type SubmitState = {
-  code: string,
-  microgrammarString: string,
-}
-
-export class Submit extends React.Component<SubmitProps, SubmitState> {
+export class Submit extends React.Component<SubmitProps, {}> {
   constructor(props) {
     super(props);
-    this.state = {
-      code: "blah<other><thing>blah",
-      microgrammarString: "<${first}><${second}>",
-    };
   }
 
   handleCodeChange = (code) => {
-    this.setState({ ...this.state, code });
+    this.props.dataToParseUpdateFn({ code })
   }
 
   handleMicrogrammarChange = (microgrammarString) => {
-    this.setState({ ...this.state, microgrammarString })
+    this.props.dataToParseUpdateFn({ microgrammarString });
   }
 
   handleSubmit = (event) => {
-    console.log('code was submitted: ' + this.state.code);
+    console.log('You pushed submit.');
     event.preventDefault();
-    const data = { code: this.state.code, microgrammarString: this.state.microgrammarString };
-    this.props.handleCodeSubmit(data);
   }
 
   //this lifts words and their ranges (line numbers and beginning/ending characters)
@@ -50,13 +40,6 @@ export class Submit extends React.Component<SubmitProps, SubmitState> {
 
   hasRange(ranges) {
     return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line)
-  }
-
-  radioInputs(name, valueAndLabelses) {
-    const oneInput = (value, label) => {
-      return <FormControlLabel value={value} name={name} control={<Radio />} label={label} />
-    }
-    return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
   render() {
@@ -70,7 +53,7 @@ export class Submit extends React.Component<SubmitProps, SubmitState> {
             Microgrammar:
             <CodeDisplay
               key="microgrammarInput"
-              dataToParse={{ code: this.state.microgrammarString }}
+              code={this.props.dataToParse.microgrammarString}
               handleCodeChange={this.handleMicrogrammarChange}
               className="microgrammarInput"
             />
@@ -79,7 +62,7 @@ export class Submit extends React.Component<SubmitProps, SubmitState> {
               key="parseThisInput"
               highlightFn={this.props.highlightFn}
               className="parseThisInput"
-              dataToParse={{ code: this.state.code }}
+              code={this.props.dataToParse.code}
               handleCodeChange={this.handleCodeChange}
             />
             <Button

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Controlled as CodeMirror, IDefineModeOptions } from 'react-codemirror2'
 import 'codemirror/theme/material.css';
 import 'codemirror/lib/codemirror.css';
@@ -7,13 +6,12 @@ import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/addon/selection/mark-selection.js'
 import { HighlightFunction, areWeDone } from './highlightCode';
 import { StringStream } from 'codemirror';
+import React from 'react';
 
 export type CodeDisplayProps = {
-    dataToParse: {
-        code: string,
-    },
+    code: string,
     className?: string,
-    handleCodeChange: any,
+    handleCodeChange: (newCode: string) => void,
     highlightFn?: HighlightFunction
 }
 
@@ -49,23 +47,18 @@ export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRan
             theme: 'material'
         }
 
-
-
         return (
             <CodeMirror
                 className={this.props.className}
                 //@ts-ignore
                 ref={(c: any) => this.cm = c}
-                value={this.props.dataToParse.code}
+                value={this.props.code}
                 options={options}
                 defineMode={customMode(this.props.className, this.props.highlightFn)}
                 onBeforeChange={(editor, data, value) => {
                     //@ts-ignore
-                    value = this.updateCode(value)
-                }}
-                onChange={(editor, data, value) => {
-                    // @ts-ignore
-                    value = this.updateCode(value);
+                    // value =
+                    this.updateCode(value) // wtf why are we setting it to void
                 }}
                 onSelection={(editor, data) => {
                     this.updateSelectedRanges(data.ranges)
