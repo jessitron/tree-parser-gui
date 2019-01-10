@@ -5,7 +5,7 @@ import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/gfm/gfm.js';
 import 'codemirror/addon/selection/mark-selection.js'
 import { HighlightFunction, areWeDone } from './highlightCode';
-import { StringStream } from 'codemirror';
+import { StringStream, Mode, Editor } from 'codemirror';
 import React from 'react';
 
 export type CodeDisplayProps = {
@@ -15,21 +15,17 @@ export type CodeDisplayProps = {
     highlightFn?: HighlightFunction
 }
 
-export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRanges: any }> {
+export class CodeDisplay extends React.Component<CodeDisplayProps, {}> {
     constructor(props) {
         super(props);
         console.log("I am a code display with class " + props.className)
-        this.state = {
-            selectedRanges: null
-        }
     }
+
+    private editor: Editor;
+    private overlay?: Mode<any>;
 
     updateCode = (newCode) => {
         this.props.handleCodeChange(newCode);
-    }
-
-    updateSelectedRanges = (selectedRanges: any) => {
-        this.setState({ ...this.state, selectedRanges })
     }
 
     //this works for the first selection, but not multiple
@@ -43,68 +39,61 @@ export class CodeDisplay extends React.Component<CodeDisplayProps, { selectedRan
             readOnly: false,
             autoRefresh: true,
             autoSave: true,
-            mode: this.props.highlightFn ? "yourMicrogrammar" : "text/plain",
+            mode: "text/plain",
             theme: 'material'
+        }
+
+        if (this.editor && this.overlay) {
+            this.editor.removeOverlay(this.overlay);
+            this.overlay = null;
+        }
+        if (this.editor && this.props.highlightFn) {
+            this.overlay = customMode(this.props.className, this.props.highlightFn);
+            this.editor.addOverlay(this.overlay);
         }
 
         return (
             <CodeMirror
                 className={this.props.className}
+                editorDidMount={editor => { this.editor = editor }}
                 //@ts-ignore
                 ref={(c: any) => this.cm = c}
                 value={this.props.code}
                 options={options}
-                defineMode={customMode(this.props.className, this.props.highlightFn)}
                 onBeforeChange={(editor, data, value) => {
-                    //@ts-ignore
-                    // value =
-                    this.updateCode(value) // wtf why are we setting it to void
-                }}
-                onSelection={(editor, data) => {
-                    this.updateSelectedRanges(data.ranges)
-                    // @ts-ignore
+                    this.updateCode(value)
                 }}
             />
         );
     }
 }
 
-function customMode(className: string, highlightFn?: HighlightFunction): IDefineModeOptions {
+function customMode(className: string, highlightFn?: HighlightFunction): Mode<any> {
     if (!highlightFn) {
         console.log("Returning plain microgrammar for " + className);
         return plainMode;
     }
     console.log("Returning special customMode for " + className);
     return {
-        name: "yourMicrogrammar",
-        fn: () => {
-            return {
-                token: (stream: StringStream) => {
-                    console.log("pos:" + JSON.stringify(stream.pos));
-                    const highlightAdvice = highlightFn(stream.pos);
+        token: (stream: StringStream) => {
+            console.log("pos:" + JSON.stringify(stream.pos));
+            const highlightAdvice = highlightFn(stream.pos);
 
-                    if (areWeDone(highlightAdvice)) {
-                        console.log("Eating everything")
-                        stream.eatWhile(() => true);
-                        return null;
-                    }
-                    // advance the specified number of characters
-                    console.log("Eating so many: " + highlightAdvice.eatChars)
-                    for (let i = 0; i < highlightAdvice.eatChars; i++) {
-                        stream.next();
-                    }
-                    return highlightAdvice.className;
-                }
+            if (areWeDone(highlightAdvice)) {
+                console.log("Eating everything")
+                stream.eatWhile(() => true);
+                return null;
             }
+            // advance the specified number of characters
+            console.log("Eating so many: " + highlightAdvice.eatChars)
+            for (let i = 0; i < highlightAdvice.eatChars; i++) {
+                stream.next();
+            }
+            return highlightAdvice.className;
         }
     }
 }
 
-const plainMode: IDefineModeOptions = {
-    name: "plain",
-    fn: () => {
-        return {
-            token: (stream) => { stream.eatWhile(() => true); return null; }
-        }
-    }
+const plainMode: Mode<any> = {
+    token: (stream) => { stream.eatWhile(() => true); return null; }
 };
