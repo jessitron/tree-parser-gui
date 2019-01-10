@@ -68,7 +68,8 @@ styles = {
         <AppBar color="secondary" style={this.styles.header}>
           <Typography 
             variant="title" 
-            color="inherit">
+            color="inherit"
+            >
             Parse My Code!
           </Typography>
           <img src="https://atomist.com/img/Atomist-Logo-White-Horiz.png" style={{width: '15%', height: '50%'}}></img>
