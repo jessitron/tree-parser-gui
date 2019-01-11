@@ -68,7 +68,7 @@ styles = {
         <AppBar color="secondary" style={this.styles.header}>
           <Typography 
             variant="title" 
-            color="inherit"
+            
             >
             Parse My Code!
           </Typography>
