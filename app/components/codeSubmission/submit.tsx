@@ -51,7 +51,7 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
 
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <FormControlLabel value={value} name={name} control={<Radio />} label={label} />
+      return <FormControlLabel value={value} name={name} control={<Radio color="secondary" />} label={label} color="white"/>
     }
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
@@ -60,8 +60,9 @@ export class Submit extends React.Component<{ handleCodeSubmit: any, setSelected
     return (
       <div>
         <div className="essayForm"
-          style={{width: "100%"}}>
+          style={{width: "100%", backgroundColor: "'#172330'"}}>
           <form 
+            style={{backgroundColor: '#172330'}}
             onSubmit={this.handleSubmit}
           >
             <FormControl>

@@ -1,4 +1,9 @@
-
+.gooeyOutside {
+  display: flex;
+  flex-direction: column;
+  background-color: #101821;
+  margin-top: 6em;
+}
 .parserChoice div {
   background-color: blanchedalmond;
   color: red;
@@ -54,11 +59,13 @@
   width: 100%;
 }
 .talkOutLoud {
-    float: right;
+    align-self: flex-end;
+    width: 8%;
     padding: 0.5em;
     background-color: antiquewhite;
     border-radius: 10px;
     box-shadow: -5px 5px 5px darkgoldenrod;
+    margin: 1em;
 }
 
 /* the left of the screen: accept entry of code or display the code */
