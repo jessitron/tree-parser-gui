@@ -4,7 +4,7 @@ import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
 import { TreeParseGUIState, DataToParse, AST } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
-import { stringify } from 'querystring';
+import * as _ from "lodash";
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -37,12 +37,15 @@ export class TreeParseGUI extends React.Component<{},
       });
   }
 
+  updateTree = _.debounce(async () => {
+    const newAst = await getTree(this.state.dataToParse);
+    this.setState({ ast: newAst })
+  }, 500);
+
   handleCodeSubmit = async (data: Partial<DataToParse>) => {
     console.log("in handleCodeSubmit. data: ", data);
-    const full: DataToParse = { ... this.state.dataToParse, ...data }
     this.setState(s => ({ dataToParse: { ...s.dataToParse, ...data }, ast: [] }))
-    const newAst = await getTree(full);
-    this.setState({ast: newAst })
+    this.updateTree();
   }
 
   highlightFn: HighlightFunction = (offset: number) => highlightFromAst(this.state.ast, offset);
