@@ -39,15 +39,25 @@ export class Submit extends React.Component<SubmitProps, {}> {
   }
 
   hasRange(ranges) {
+
     return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line)
+  }
+
+  radioInputs(name, valueAndLabelses) {
+    const oneInput = (value, label) => {
+      return <FormControlLabel value={value} name={name} control={<Radio color="primary" />} label={label} color="white" />
+    }
+    return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
 
   render() {
     return (
       <div>
         <div className="essayForm"
-          style={{ width: "100%" }}>
+
+          style={{ width: "100%", backgroundColor: "'#172330'" }}>
           <form
+            style={{ backgroundColor: '#172330' }}
             onSubmit={this.handleSubmit}
           >
             Microgrammar:
