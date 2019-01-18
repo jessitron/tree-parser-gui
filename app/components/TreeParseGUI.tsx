@@ -6,6 +6,7 @@ import { TreeParseGUIState, DataToParse, AST, ParseResponse, isErrorResponse } f
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
 import * as _ from "lodash";
 import { AppBar, Typography } from '@material-ui/core/';
+import { ErrorDisplay } from './ErrorDisplay';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -47,9 +48,9 @@ export class TreeParseGUI extends React.Component<{},
   updateTree = _.debounce(async () => {
     const parseResponse = await getTree(this.state.dataToParse);
     if (isErrorResponse(parseResponse)) {
-      return this.setState({ ast: [] });
+      return this.setState({ ast: [], error: parseResponse });
     }
-    this.setState({ ast: parseResponse.ast })
+    this.setState({ ast: parseResponse.ast, error: undefined })
   }, 500);
 
   handleCodeSubmit = async (data: Partial<DataToParse>) => {
@@ -94,6 +95,7 @@ export class TreeParseGUI extends React.Component<{},
         </AppBar>
         <div style={{ display: "flex" }}>
           <div className="code-view">
+            <ErrorDisplay possibleError={this.state.error} />
             <Submit
               dataToParse={this.state.dataToParse}
               dataToParseUpdateFn={this.handleCodeSubmit}

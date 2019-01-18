@@ -96,3 +96,11 @@
 .cm-match {
   text-decoration: underline overline darkgoldenrod;
 }
+
+.error-display {
+  color: red;
+}
+
+.no-error {
+  display: none;
+}

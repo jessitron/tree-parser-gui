@@ -62,7 +62,12 @@ export class Submit extends React.Component<SubmitProps, {}> {
 
   radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
-      return <FormControlLabel value={value} name={name} control={<Radio color="primary" />} label={label} color="white" />
+      return <FormControlLabel
+        value={value} name={name}
+        control={<Radio color="primary" />}
+        label={label}
+        color="white"
+        key={value} />
     }
     return valueAndLabelses.map(o => oneInput(o.value, o.label));
   }
@@ -84,6 +89,7 @@ export class Submit extends React.Component<SubmitProps, {}> {
             <FormControl>
               <FormLabel component="legend">Choose A Parser</FormLabel>
               <RadioGroup
+                key="parser-choice"
                 value={this.props.dataToParse.parser.kind}
                 onChange={this.handleParserChoiceChange}>
                 {this.radioInputs("parserChoice", availableParsers)}

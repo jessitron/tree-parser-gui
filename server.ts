@@ -54,18 +54,21 @@ app.post("/parse", async (req, response) => {
   const parseData = req.body as DataToParse;
   const parser = fromParserSpec(parseData.parser);
 
-  const ast = await parser.toAst(new InMemoryProjectFile("hello", parseData.code));
+  try {
+    const ast = await parser.toAst(new InMemoryProjectFile("hello", parseData.code));
 
-  const matches = await findMatches(InMemoryProject.of({ path: "hello", content: parseData.code }),
-    parser, "**/*", parseData.pathExpression);
+    const matches = await findMatches(InMemoryProject.of({ path: "hello", content: parseData.code }),
+      parser, "**/*", parseData.pathExpression);
 
-  const noncircularAst = matches.map(simplifyTree);
+    const noncircularAst = matches.map(simplifyTree);
 
-  console.log(stringify(noncircularAst));
+    console.log(stringify(noncircularAst));
 
-  const parseResponse: ParseResponse = { ast: noncircularAst };
-  response.send(parseResponse);
-
+    const parseResponse: ParseResponse = { ast: noncircularAst };
+    response.send(parseResponse);
+  } catch (e) {
+    response.send({ error: { message: e.message } })
+  }
 });
 
 function simplifyTree(tn: TreeNode): TreeNode {

@@ -24,7 +24,8 @@ export type TreeParseGUIState =
         selectedRanges: object[],
         displayCode: boolean,
         dataToParse: DataToParse,
-        ast: AST
+        ast: AST,
+        error?: ErrorResponse
     }
 
 export type ErrorResponse = { error: { message: string } };
