@@ -8,7 +8,7 @@ var pj = require('./package.json');
 import { Microgrammar } from "@atomist/microgrammar";
 import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
 import { InMemoryProjectFile, InMemoryProject } from '@atomist/automation-client';
-import { DataToParse, ParserSpec } from './app/TreeParseGUIState';
+import { DataToParse, ParserSpec, ParseResponse } from './app/TreeParseGUIState';
 import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
 import stringify from "json-stringify-safe";
@@ -63,11 +63,12 @@ app.post("/parse", async (req, response) => {
 
   console.log(stringify(noncircularAst));
 
-  response.send({ ast: noncircularAst });
+  const parseResponse: ParseResponse = { ast: noncircularAst };
+  response.send(parseResponse);
 
 });
 
-function simplifyTree(tn: TreeNode): object {
+function simplifyTree(tn: TreeNode): TreeNode {
   const children = (tn.$children || []).map(simplifyTree);
   const output = {
     $name: tn.$name,

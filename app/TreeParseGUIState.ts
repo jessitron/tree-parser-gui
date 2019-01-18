@@ -1,4 +1,5 @@
 import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
+import { TreeNode } from "@atomist/tree-path";
 
 export type ParserSpec = {
     kind: "microgrammar",
@@ -14,7 +15,7 @@ export type DataToParse = {
 }
 
 
-export type AST = PatternMatch[];
+export type AST = TreeNode[];
 
 export type TreeParseGUIState =
     {
@@ -25,3 +26,11 @@ export type TreeParseGUIState =
         dataToParse: DataToParse,
         ast: AST
     }
+
+export type ErrorResponse = { error: { message: string } };
+export type ParseResponse = { ast: AST } | ErrorResponse;
+
+export function isErrorResponse(pr: ParseResponse): pr is ErrorResponse {
+    const maybe = pr as ErrorResponse;
+    return !!maybe.error;
+}

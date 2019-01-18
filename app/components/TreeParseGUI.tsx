@@ -2,7 +2,7 @@ import React from 'react';
 import { Submit } from './codeSubmission/submit';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
-import { TreeParseGUIState, DataToParse, AST } from '../TreeParseGUIState';
+import { TreeParseGUIState, DataToParse, AST, ParseResponse, isErrorResponse } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
 import * as _ from "lodash";
 import { AppBar, Typography } from '@material-ui/core/';
@@ -45,8 +45,11 @@ export class TreeParseGUI extends React.Component<{},
   }
 
   updateTree = _.debounce(async () => {
-    const newAst = await getTree(this.state.dataToParse);
-    this.setState({ ast: newAst })
+    const parseResponse = await getTree(this.state.dataToParse);
+    if (isErrorResponse(parseResponse)) {
+      return this.setState({ ast: [] });
+    }
+    this.setState({ ast: parseResponse.ast })
   }, 500);
 
   handleCodeSubmit = async (data: Partial<DataToParse>) => {
@@ -108,7 +111,7 @@ export class TreeParseGUI extends React.Component<{},
 }
 
 
-async function getTree(dataToParse: DataToParse) {
+async function getTree(dataToParse: DataToParse): Promise<ParseResponse> {
   const response = await fetch('/parse', {
     method: "POST",
     headers: {
@@ -117,5 +120,5 @@ async function getTree(dataToParse: DataToParse) {
     body: JSON.stringify(dataToParse), // body data type must match "Content-Type" header
   });
   const json = await response.json();
-  return json.ast as AST;
+  return json as ParseResponse;
 }
