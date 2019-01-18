@@ -51,7 +51,9 @@ export function highlightFromAst(
 }
 
 function offsetInFile(content: string, lineFrom0: number, charFrom0: number): number {
-
+    if (lineFrom0 === 0) {
+        return charFrom0;
+    }
     const previousLines = content.split("\n").slice(0, lineFrom0).join("\n") + "\n";
     return previousLines.length + charFrom0;
 }
