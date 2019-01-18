@@ -49,7 +49,8 @@ export class TreeParseGUI extends React.Component<{},
     this.updateTree();
   }
 
-  highlightFn: HighlightFunction = (offset: number) => highlightFromAst(this.state.ast, offset);
+  highlightFn: HighlightFunction = (lineFrom0: number, charFrom0: number) =>
+    highlightFromAst(this.state.dataToParse.code, this.state.ast, lineFrom0, charFrom0);
 
   setSelectedWordsAndRanges = (words, ranges) => {
     this.setState({ selectedWords: words, selectedRanges: ranges })

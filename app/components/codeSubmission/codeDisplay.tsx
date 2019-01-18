@@ -77,7 +77,7 @@ function customMode(className: string, highlightFn?: HighlightFunction): Mode<an
     return {
         token: (stream: StringStream) => {
             console.log("pos:" + JSON.stringify(stream.pos));
-            const highlightAdvice = highlightFn(stream.pos);
+            const highlightAdvice = highlightFn((stream as any).lineOracle.line, stream.pos);
 
             if (areWeDone(highlightAdvice)) {
                 console.log("Eating everything")

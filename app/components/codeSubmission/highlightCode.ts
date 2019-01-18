@@ -10,10 +10,16 @@ export function areWeDone(hi: HighlightInstruction): hi is WeAreDoneHere {
     return hi === "we are done here";
 }
 
-export type HighlightFunction = (offset: number) => HighlightInstruction
+export type HighlightFunction = (lineFrom0: number, charFrom0: number) => HighlightInstruction
 
-export function highlightFromAst(ast: AST, offset: number) {
+export function highlightFromAst(
+    code: string,
+    ast: AST,
+    lineFrom0: number,
+    charFrom0: number) {
     console.log("This is the highlight function");
+
+    const offset = offsetInFile(code, lineFrom0, charFrom0);
 
     // I would rather do this once per update, but sad day.
     const highlightMatches = ast.map(match => ({
@@ -42,4 +48,10 @@ export function highlightFromAst(ast: AST, offset: number) {
     console.log("The matches I know are: " + JSON.stringify(highlightMatches));
 
     return "we are done here";
+}
+
+function offsetInFile(content: string, lineFrom0: number, charFrom0: number): number {
+
+    const previousLines = content.split("\n").slice(0, lineFrom0).join("\n") + "\n";
+    return previousLines.length + charFrom0;
 }
