@@ -14,8 +14,8 @@ export type SubmitProps = {
   setSelectedWordsAndRanges: any
 }
 
-const availableParsers = [{ value: "java9", label: "Java" },
-{ value: "markdown", label: "Markdown" },
+const availableParsers = [{ value: "Java9", label: "Java" },
+{ value: "Markdown", label: "Markdown" },
 { value: "microgrammar", label: "Microgrammar" },
 ];
 

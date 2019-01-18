@@ -13,6 +13,8 @@ import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
 import stringify from "json-stringify-safe";
 import { findMatches } from '@atomist/automation-client/lib/tree/ast/astUtils';
+import { Java9FileParser } from "@atomist/antlr";
+import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 
 
 // http://expressjs.com/en/starter/static-files.html
@@ -77,18 +79,22 @@ function simplifyTree(tn: TreeNode): object {
 }
 
 function fromParserSpec(ps: ParserSpec): FileParser {
-  if (ps.kind !== "microgrammar") {
-    throw new Error("unsupported parser kind: " + ps.kind);
+  switch (ps.kind) {
+    case "microgrammar":
+
+      console.log("Received mg string: " + ps.microgrammarString);
+
+      const mg = Microgrammar.fromString(ps.microgrammarString, {
+        // TODO: these terms should be passed in
+        first: /[a-zA-Z0-9]+/,
+        second: /[a-zA-Z0-9]+/,
+      });
+
+      return new MicrogrammarBasedFileParser("root", ps.matchName, mg);
+    case "Java9":
+      return Java9FileParser;
+    case "Markdown":
+      return RemarkFileParser;
   }
-  console.log("Received mg string: " + ps.microgrammarString);
-
-  const mg = Microgrammar.fromString(ps.microgrammarString, {
-    // TODO: these terms should be passed in
-    first: /[a-zA-Z0-9]+/,
-    second: /[a-zA-Z0-9]+/,
-  });
-
-  const p = new MicrogrammarBasedFileParser("root", ps.matchName, mg);
-  return p;
 }
 
