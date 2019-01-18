@@ -6,8 +6,13 @@ import { AddressInfo } from 'net';
 var app = express();
 var pj = require('./package.json');
 import { Microgrammar } from "@atomist/microgrammar";
+import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
+import { InMemoryProjectFile } from '@atomist/automation-client';
+import { DataToParse, ParserSpec } from './app/TreeParseGUIState';
+import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
+import { TreeNode } from '@atomist/tree-path';
+import stringify from "json-stringify-safe";
 
-import * as stringifyTree from "stringify-tree";
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('static'));
@@ -43,22 +48,46 @@ app.post("/parse", async (req, response) => {
   }
 
   console.log("Received code to parse: " + req.body.code);
-  const content = req.body.code;
-  const mgString = req.body.microgrammarString;
-  console.log("Received mg string: " + mgString);
+  const parseData = req.body as DataToParse;
+  const parser = fromParserSpec(parseData.parser);
 
-  // const element = Microgrammar.fromString("<${namex}>", {
-  //   namex: /[a-zA-Z0-9]+/,
-  // });
-  const mg = Microgrammar.fromString(mgString, {
+  const ast = await parser.toAst(new InMemoryProjectFile("hello", parseData.code));
+
+  const noncircularAst = simplifyTree(ast);
+
+  console.log(stringify(noncircularAst));
+
+  response.send({ ast: noncircularAst });
+
+});
+
+function simplifyTree(tn: TreeNode): object {
+  const children = (tn.$children || []).map(simplifyTree);
+  const output = {
+    name: tn.$name,
+    offset: tn.$offset,
+    value: tn.$value,
+    children,
+  }
+  const nonMoneyProperties = Object.keys(tn).filter(k => !k.startsWith("$"));
+  console.log("copying properties: " + nonMoneyProperties.join())
+  nonMoneyProperties.forEach(k => output[k] = tn[k]);
+  return output;
+}
+
+function fromParserSpec(ps: ParserSpec): FileParser {
+  if (ps.kind !== "microgrammar") {
+    throw new Error("unsupported parser kind: " + ps.kind);
+  }
+  console.log("Received mg string: " + ps.microgrammarString);
+
+  const mg = Microgrammar.fromString(ps.microgrammarString, {
+    // TODO: these terms should be passed in
     first: /[a-zA-Z0-9]+/,
     second: /[a-zA-Z0-9]+/,
   });
-  const ast = mg.findMatches(content);
 
-  //console.log("The microgrammar is: " + JSON.stringify(mg, null, 2));
-
-  response.send({ ast });
-
-});
+  const p = new MicrogrammarBasedFileParser("root", ps.matchName, mg);
+  return p;
+}
 

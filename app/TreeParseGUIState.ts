@@ -1,8 +1,14 @@
 import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 
+export type ParserSpec = {
+    kind: "microgrammar",
+    microgrammarString: string,
+    matchName: string,
+} | { kind: "Java9" } | { kind: "Markdown" }
+
 export type DataToParse = {
     code: string,
-    microgrammarString: string,
+    parser: ParserSpec,
 }
 
 

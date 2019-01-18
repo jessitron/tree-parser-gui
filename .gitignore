@@ -2,3 +2,5 @@ node_modules/
 public/
 *.js
 !webpack.config.js
+*.d.ts
+*.map

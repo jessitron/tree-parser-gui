@@ -24,7 +24,13 @@ export class Submit extends React.Component<SubmitProps, {}> {
   }
 
   handleMicrogrammarChange = (microgrammarString) => {
-    this.props.dataToParseUpdateFn({ microgrammarString });
+    this.props.dataToParseUpdateFn({
+      parser: {
+        kind: "microgrammar",
+        microgrammarString,
+        matchName: "mg",
+      }
+    });
   }
 
   handleSubmit = (event) => {
@@ -51,6 +57,10 @@ export class Submit extends React.Component<SubmitProps, {}> {
   }
 
   render() {
+    const parser = this.props.dataToParse.parser;
+    if (parser.kind !== "microgrammar") {
+      return <div className="notMe" />
+    };
     return (
       <div>
         <div className="essayForm"
@@ -63,7 +73,7 @@ export class Submit extends React.Component<SubmitProps, {}> {
             Microgrammar:
             <CodeDisplay
               key="microgrammarInput"
-              code={this.props.dataToParse.microgrammarString}
+              code={parser.microgrammarString}
               handleCodeChange={this.handleMicrogrammarChange}
               className="microgrammarInput"
             />
@@ -75,14 +85,6 @@ export class Submit extends React.Component<SubmitProps, {}> {
               code={this.props.dataToParse.code}
               handleCodeChange={this.handleCodeChange}
             />
-            <Button
-              style={{ margin: "1em" }}
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
-              Submit
-            </Button>
           </form>
         </div>
       </div>

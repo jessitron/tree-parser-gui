@@ -20,7 +20,11 @@ export class TreeParseGUI extends React.Component<{},
       displayCode: false,
       dataToParse: {
         code: "blah<other><thing> haha",
-        microgrammarString: "<${first}><${second}>",
+        parser: {
+          kind: "microgrammar",
+          microgrammarString: "<${first}><${second}>",
+          matchName: "mg",
+        },
       },
       ast: [],
     }
