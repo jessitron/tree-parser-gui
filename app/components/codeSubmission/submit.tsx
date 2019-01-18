@@ -1,7 +1,7 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import { Radio, FormControlLabel } from "@material-ui/core";
+import { Radio, FormControlLabel, FormControl, FormLabel, RadioGroup } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
 import { DataToParse } from '../../TreeParseGUIState';
 import { HighlightFunction } from './highlightCode';
@@ -14,6 +14,11 @@ export type SubmitProps = {
   setSelectedWordsAndRanges: any
 }
 
+const availableParsers = [{ value: "java9", label: "Java" },
+{ value: "markdown", label: "Markdown" },
+{ value: "microgrammar", label: "Microgrammar" },
+];
+
 export class Submit extends React.Component<SubmitProps, {}> {
   constructor(props) {
     super(props);
@@ -21,6 +26,11 @@ export class Submit extends React.Component<SubmitProps, {}> {
 
   handleCodeChange = (code) => {
     this.props.dataToParseUpdateFn({ code })
+  }
+
+  handleParserChoiceChange = (event, parserChoice) => {
+    // TODO: populate mg bits?
+    this.props.dataToParseUpdateFn({ parser: { kind: parserChoice } })
   }
 
   handleMicrogrammarChange = (microgrammarString) => {
@@ -71,6 +81,14 @@ export class Submit extends React.Component<SubmitProps, {}> {
             style={{ backgroundColor: '#172330' }}
             onSubmit={this.handleSubmit}
           >
+            <FormControl>
+              <FormLabel component="legend">Choose A Parser</FormLabel>
+              <RadioGroup
+                value={this.props.dataToParse.parser.kind}
+                onChange={this.handleParserChoiceChange}>
+                {this.radioInputs("parserChoice", availableParsers)}
+              </RadioGroup>
+            </FormControl>
             Microgrammar:
             <CodeDisplay
               key="microgrammarInput"
