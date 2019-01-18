@@ -24,7 +24,7 @@ export function highlightFromAst(
     // I would rather do this once per update, but sad day.
     const highlightMatches = ast.map(match => ({
         begin: match.$offset,
-        length: match.$matched.length,
+        length: match.$value.length,
     }));
 
     if (highlightMatches.length === 0) {

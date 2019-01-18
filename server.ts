@@ -7,11 +7,12 @@ var app = express();
 var pj = require('./package.json');
 import { Microgrammar } from "@atomist/microgrammar";
 import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
-import { InMemoryProjectFile } from '@atomist/automation-client';
+import { InMemoryProjectFile, InMemoryProject } from '@atomist/automation-client';
 import { DataToParse, ParserSpec } from './app/TreeParseGUIState';
 import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
 import stringify from "json-stringify-safe";
+import { findMatches } from '@atomist/automation-client/lib/tree/ast/astUtils';
 
 
 // http://expressjs.com/en/starter/static-files.html
@@ -53,7 +54,10 @@ app.post("/parse", async (req, response) => {
 
   const ast = await parser.toAst(new InMemoryProjectFile("hello", parseData.code));
 
-  const noncircularAst = simplifyTree(ast);
+  const matches = await findMatches(InMemoryProject.of({ path: "hello", content: parseData.code }),
+    parser, "**/*", parseData.pathExpression);
+
+  const noncircularAst = matches.map(simplifyTree);
 
   console.log(stringify(noncircularAst));
 
@@ -64,14 +68,11 @@ app.post("/parse", async (req, response) => {
 function simplifyTree(tn: TreeNode): object {
   const children = (tn.$children || []).map(simplifyTree);
   const output = {
-    name: tn.$name,
-    offset: tn.$offset,
-    value: tn.$value,
-    children,
+    $name: tn.$name,
+    $offset: tn.$offset,
+    $value: tn.$value,
+    $children: children,
   }
-  const nonMoneyProperties = Object.keys(tn).filter(k => !k.startsWith("$"));
-  console.log("copying properties: " + nonMoneyProperties.join())
-  nonMoneyProperties.forEach(k => output[k] = tn[k]);
   return output;
 }
 

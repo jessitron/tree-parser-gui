@@ -4,11 +4,13 @@ export type ParserSpec = {
     kind: "microgrammar",
     microgrammarString: string,
     matchName: string,
+    rootName: string,
 } | { kind: "Java9" } | { kind: "Markdown" }
 
 export type DataToParse = {
     code: string,
     parser: ParserSpec,
+    pathExpression: string,
 }
 
 

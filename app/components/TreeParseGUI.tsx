@@ -24,7 +24,9 @@ export class TreeParseGUI extends React.Component<{},
           kind: "microgrammar",
           microgrammarString: "<${first}><${second}>",
           matchName: "mg",
+          rootName: "root"
         },
+        pathExpression: "/root/mg",
       },
       ast: [],
     }

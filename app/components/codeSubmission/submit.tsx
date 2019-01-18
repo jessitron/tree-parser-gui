@@ -1,7 +1,7 @@
 // credit: https://codepen.io/austinlyons/pen/ZLEKgN
 
 import React from 'react';
-import { Button, Radio, FormControlLabel } from "@material-ui/core";
+import { Radio, FormControlLabel } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
 import { DataToParse } from '../../TreeParseGUIState';
 import { HighlightFunction } from './highlightCode';
@@ -29,6 +29,7 @@ export class Submit extends React.Component<SubmitProps, {}> {
         kind: "microgrammar",
         microgrammarString,
         matchName: "mg",
+        rootName: "root",
       }
     });
   }
