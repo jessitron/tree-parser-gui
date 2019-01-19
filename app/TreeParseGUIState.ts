@@ -1,12 +1,14 @@
 import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { TreeNode } from "@atomist/tree-path";
 
-export type ParserSpec = {
+export type ParserSpec = MicrogrammarParserSpec | { kind: "Java9" } | { kind: "Markdown" }
+
+export type MicrogrammarParserSpec = {
     kind: "microgrammar",
     microgrammarString: string,
     matchName: string,
     rootName: string,
-} | { kind: "Java9" } | { kind: "Markdown" }
+}
 
 export type DataToParse = {
     code: string,

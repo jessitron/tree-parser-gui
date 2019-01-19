@@ -51,11 +51,10 @@ app.post("/parse", async (req, response) => {
   }
 
   console.log("Received code to parse: " + req.body.code);
-  const parseData = req.body as DataToParse;
-  const parser = fromParserSpec(parseData.parser);
 
   try {
-    const ast = await parser.toAst(new InMemoryProjectFile("hello", parseData.code));
+    const parseData = req.body as DataToParse;
+    const parser = fromParserSpec(parseData.parser);
 
     const matches = await findMatches(InMemoryProject.of({ path: "hello", content: parseData.code }),
       parser, "**/*", parseData.pathExpression);

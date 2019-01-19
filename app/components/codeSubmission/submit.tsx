@@ -5,6 +5,8 @@ import { Radio, FormControlLabel, FormControl, FormLabel, RadioGroup } from "@ma
 import { CodeDisplay } from './codeDisplay';
 import { DataToParse } from '../../TreeParseGUIState';
 import { HighlightFunction } from './highlightCode';
+import { MicrogrammarInput } from '../MicrogrammarInput';
+import { PathExpressionInput } from '../PathExpressionInput';
 
 
 export type SubmitProps = {
@@ -34,7 +36,7 @@ export class Submit extends React.Component<SubmitProps, {}> {
   }
 
   handleMicrogrammarChange = (microgrammarString) => {
-    this.props.dataToParseUpdateFn({
+    return this.props.dataToParseUpdateFn({
       parser: {
         kind: "microgrammar",
         microgrammarString,
@@ -42,6 +44,12 @@ export class Submit extends React.Component<SubmitProps, {}> {
         rootName: "root",
       }
     });
+  }
+
+  handlePathExpressionChange = (pathExpression) => {
+    return this.props.dataToParseUpdateFn({
+      pathExpression
+    })
   }
 
   handleSubmit = (event) => {
@@ -74,13 +82,10 @@ export class Submit extends React.Component<SubmitProps, {}> {
 
   render() {
     const parser = this.props.dataToParse.parser;
-    if (parser.kind !== "microgrammar") {
-      return <div className="notMe" />
-    };
+
     return (
       <div>
         <div className="essayForm"
-
           style={{ width: "100%", backgroundColor: "'#172330'" }}>
           <form
             style={{ backgroundColor: '#172330' }}
@@ -90,18 +95,16 @@ export class Submit extends React.Component<SubmitProps, {}> {
               <FormLabel component="legend">Choose A Parser</FormLabel>
               <RadioGroup
                 key="parser-choice"
-                value={this.props.dataToParse.parser.kind}
+                value={parser.kind}
                 onChange={this.handleParserChoiceChange}>
                 {this.radioInputs("parserChoice", availableParsers)}
               </RadioGroup>
             </FormControl>
-            Microgrammar:
-            <CodeDisplay
-              key="microgrammarInput"
-              code={parser.microgrammarString}
-              handleCodeChange={this.handleMicrogrammarChange}
-              className="microgrammarInput"
-            />
+            <MicrogrammarInput parser={parser}
+              handleMicrogrammarChange={this.handleMicrogrammarChange} />
+            <PathExpressionInput
+              pathExpression={this.props.dataToParse.pathExpression}
+              handlePathExpressionChange={this.handlePathExpressionChange} />
             Parse This:
             <CodeDisplay
               key="parseThisInput"

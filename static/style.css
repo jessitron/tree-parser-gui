@@ -101,6 +101,10 @@
   color: red;
 }
 
-.no-error {
+.hidden {
   display: none;
+}
+
+#microgrammarInput {
+  width: 100%
 }
