@@ -75,7 +75,7 @@ function simplifyTree(tn: TreeNode): TreeNode {
   const output = {
     $name: tn.$name,
     $offset: tn.$offset,
-    $value: tn.$value,
+    $value: tn.$value || "",
     $children: children,
   }
   return output;

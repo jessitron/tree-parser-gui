@@ -76,6 +76,7 @@ function customMode(className: string, highlightFn?: HighlightFunction): Mode<an
     console.log("Returning special customMode for " + className);
     return {
         token: (stream: StringStream) => {
+            const startingPos = stream.pos;
             console.log("pos:" + JSON.stringify(stream.pos));
             const highlightAdvice = highlightFn((stream as any).lineOracle.line, stream.pos);
 
@@ -88,6 +89,10 @@ function customMode(className: string, highlightFn?: HighlightFunction): Mode<an
             console.log("Eating so many: " + highlightAdvice.eatChars)
             for (let i = 0; i < highlightAdvice.eatChars; i++) {
                 stream.next();
+            }
+            if (stream.pos === startingPos) {
+                stream.next(); // always advance at least one
+                return null; // but never highlight that sad one
             }
             return highlightAdvice.className;
         }
