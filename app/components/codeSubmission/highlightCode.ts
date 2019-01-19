@@ -35,6 +35,10 @@ export function highlightFromAst(
     if (startingMatch) {
         return { eatChars: startingMatch.length, className: "match" }
     }
+    const midMatch = highlightMatches.find(m => m.begin < offset && offset < (m.begin + m.length))
+    if (midMatch) {
+        return { eatChars: midMatch.begin + midMatch.length - offset, className: "match" }
+    }
     const nextMatch = highlightMatches.find(m => m.begin > offset);
     if (nextMatch) {
         return { eatChars: nextMatch.begin - offset, className: null }
