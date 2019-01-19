@@ -7,6 +7,7 @@ import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightC
 import * as _ from "lodash";
 import { AppBar, Typography } from '@material-ui/core/';
 import { ErrorDisplay } from './ErrorDisplay';
+import * as MicrogrammarInput from './MicrogrammarInput';
 
 /* the main page for the index route of this app */
 export class TreeParseGUI extends React.Component<{},
@@ -19,15 +20,15 @@ export class TreeParseGUI extends React.Component<{},
       selectedWords: [],
       selectedRanges: [],
       displayCode: false,
-      dataToParse: {
+      parserInput: {
         code: "blah<other><thing> haha",
-        parser: {
-          kind: "microgrammar",
-          microgrammarString: "<${first}><${second}>",
-          matchName: "mg",
-          rootName: "root"
+        parserKind: "microgrammar",
+        microgrammarInput: MicrogrammarInput.init,
+        pathExpression: {
+          microgrammar: MicrogrammarInput.initialPathExpression,
+          Java9: "/compilationUnit",
+          Markdown: "/root/*"
         },
-        pathExpression: "/root/mg",
       },
       ast: [],
     }
@@ -46,21 +47,33 @@ export class TreeParseGUI extends React.Component<{},
   }
 
   updateTree = _.debounce(async () => {
-    const parseResponse = await getTree(this.state.dataToParse);
+    const parserKind = this.state.parserInput.parserKind;
+    const parserSpec = parserKind === "microgrammar" ?
+      MicrogrammarInput.parserSpec(
+        this.state.parserInput.parserKind,
+        this.state.parserInput.microgrammarInput) : { kind: parserKind };
+    const dataToParse: DataToParse = {
+      parser: parserSpec,
+      code: this.state.parserInput.code,
+      pathExpression: this.state.parserInput.pathExpression[parserKind];
+    }
+    const parseResponse = await getTree(dataToParse);
     if (isErrorResponse(parseResponse)) {
       return this.setState({ ast: [], error: parseResponse });
     }
-    this.setState({ ast: parseResponse.ast, error: undefined })
+    return this.setState({ ast: parseResponse.ast, error: undefined })
   }, 500);
 
-  handleCodeSubmit = async (data: Partial<DataToParse>) => {
+  handleCodeSubmit = async (data: string) => {
     console.log("in handleCodeSubmit. data: ", data);
-    this.setState(s => ({ dataToParse: { ...s.dataToParse, ...data }, ast: [] }))
+    this.setState(s => ({ parserInput: { ...s.parserInput, code: data }, ast: [] }))
     this.updateTree();
   }
 
+  handlePathExpressionSubmit
+
   highlightFn: HighlightFunction = (lineFrom0: number, charFrom0: number) =>
-    highlightFromAst(this.state.dataToParse.code, this.state.ast, lineFrom0, charFrom0);
+    highlightFromAst(this.state.parserInput.code, this.state.ast, lineFrom0, charFrom0);
 
   setSelectedWordsAndRanges = (words, ranges) => {
     this.setState({ selectedWords: words, selectedRanges: ranges })

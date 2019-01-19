@@ -1,7 +1,9 @@
 import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { TreeNode } from "@atomist/tree-path";
 
-export type ParserSpec = MicrogrammarParserSpec | { kind: "Java9" } | { kind: "Markdown" }
+export type ParserKind = "Java9" | "Markdown" | "microgrammar";
+export type ParserSpec = MicrogrammarParserSpec | { kind: "Java9" | "Markdown" }
+
 
 export type MicrogrammarParserSpec = {
     kind: "microgrammar",
@@ -10,11 +12,14 @@ export type MicrogrammarParserSpec = {
     rootName: string,
 }
 
+type HasPathExpression = {
+    pathExpression: string,
+}
+
 export type DataToParse = {
     code: string,
     parser: ParserSpec,
-    pathExpression: string,
-}
+} & HasPathExpression;
 
 
 export type AST = TreeNode[];
@@ -25,9 +30,18 @@ export type TreeParseGUIState =
         selectedWords: string[],
         selectedRanges: object[],
         displayCode: boolean,
-        dataToParse: DataToParse,
         ast: AST,
-        error?: ErrorResponse
+        error?: ErrorResponse,
+        parserInput: {
+            parserKind: ParserKind;
+            microgrammarInput: {
+                matchName: string,
+                rootName: string,
+                microgrammarString: string,
+            }
+            pathExpression: { [K in ParserKind]: string },
+            code: string
+        }
     }
 
 export type ErrorResponse = { error: { message: string } };
