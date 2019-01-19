@@ -1,8 +1,8 @@
 import React from 'react';
-import { Submit } from './codeSubmission/submit';
+import { ParserInput } from './codeSubmission/ParserInput';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
-import { TreeParseGUIState, DataToParse, AST, ParseResponse, isErrorResponse } from '../TreeParseGUIState';
+import { TreeParseGUIState, DataToParse, AST, ParseResponse, isErrorResponse, ParserInputProps } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
 import * as _ from "lodash";
 import { AppBar, Typography } from '@material-ui/core/';
@@ -55,7 +55,7 @@ export class TreeParseGUI extends React.Component<{},
     const dataToParse: DataToParse = {
       parser: parserSpec,
       code: this.state.parserInput.code,
-      pathExpression: this.state.parserInput.pathExpression[parserKind];
+      pathExpression: this.state.parserInput.pathExpression[parserKind],
     }
     const parseResponse = await getTree(dataToParse);
     if (isErrorResponse(parseResponse)) {
@@ -64,13 +64,11 @@ export class TreeParseGUI extends React.Component<{},
     return this.setState({ ast: parseResponse.ast, error: undefined })
   }, 500);
 
-  handleCodeSubmit = async (data: string) => {
-    console.log("in handleCodeSubmit. data: ", data);
-    this.setState(s => ({ parserInput: { ...s.parserInput, code: data }, ast: [] }))
+  handleParserInputChange = async (data: ParserInputProps) => {
+    console.log("in handleParserInputChange. data: ", data);
+    this.setState(s => ({ parserInput: _.merge(s.parserInput, data), ast: [] }))
     this.updateTree();
   }
-
-  handlePathExpressionSubmit
 
   highlightFn: HighlightFunction = (lineFrom0: number, charFrom0: number) =>
     highlightFromAst(this.state.parserInput.code, this.state.ast, lineFrom0, charFrom0);
@@ -109,11 +107,10 @@ export class TreeParseGUI extends React.Component<{},
         <div style={{ display: "flex" }}>
           <div className="code-view">
             <ErrorDisplay possibleError={this.state.error} />
-            <Submit
-              dataToParse={this.state.dataToParse}
-              dataToParseUpdateFn={this.handleCodeSubmit}
+            <ParserInput
+              parserInput={this.state.parserInput}
+              updateFn={this.handleParserInputChange}
               highlightFn={this.highlightFn}
-              setSelectedWordsAndRanges={this.setSelectedWordsAndRanges}
             />
           </div>
           <Tree

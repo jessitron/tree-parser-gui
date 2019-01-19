@@ -70,7 +70,8 @@ app.post("/parse", async (req, response) => {
   }
 });
 
-function simplifyTree(tn: TreeNode): TreeNode {
+function simplifyTree(tnin: TreeNode): TreeNode {
+  const tn = condenseSingleChild(tnin);
   const children = (tn.$children || []).map(simplifyTree);
   const output = {
     $name: tn.$name,
@@ -80,6 +81,26 @@ function simplifyTree(tn: TreeNode): TreeNode {
   }
   return output;
 }
+
+function condenseSingleChild(tn: TreeNode) {
+  if (tn.$children && tn.$children.length === 1 && tn.$children[0].$offset === tn.$offset) {
+    const condenseChild = condenseSingleChild(tn.$children[0]);
+    return {
+      $children: condenseChild.$children,
+      $value: tn.$value,
+      $name: `${tn.$name}/${condenseChild.$name}`,
+      $offset: tn.$offset
+    }
+  }
+
+  return {
+    $children: tn.$children,
+    $name: tn.$name,
+    $offset: tn.$offset,
+    $value: tn.$value,
+  }
+}
+
 
 function fromParserSpec(ps: ParserSpec): FileParser {
   switch (ps.kind) {
