@@ -106,7 +106,10 @@
 }
 
 #microgrammarInput {
-  width: 100%
+  width: 100%;
+  border: solid 1px white;
+  padding-left: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 #pathExpressionInput {

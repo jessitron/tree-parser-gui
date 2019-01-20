@@ -12,9 +12,12 @@ export class MicrogrammarInput extends React.Component<{
         super(props);
     }
 
-    handleMicrogrammarChange = (microgrammarString: string) => {
-        this.setState({ savedMicrogrammar: microgrammarString })
+    handlePhraseChange = (microgrammarString: string) => {
         return this.props.handleChange({ microgrammarString });
+    }
+
+    handleTermsChange = (terms: string) => {
+        return this.props.handleChange({ terms });
     }
 
     render() {
@@ -22,11 +25,17 @@ export class MicrogrammarInput extends React.Component<{
             return <div id="MicrogrammarInput" className="hidden" />;
         }
         return <div id="microgrammarInput">
-            Microgrammar:
+            Microgrammar phrase:
            <CodeDisplay
                 key="microgrammarInput"
                 code={this.props.microgrammarInputProps.microgrammarString}
-                handleCodeChange={this.handleMicrogrammarChange}
+                handleCodeChange={this.handlePhraseChange}
+                className="microgrammarInput" />
+            Microgrammar terms:
+           <CodeDisplay
+                key="termInput"
+                code={this.props.microgrammarInputProps.terms}
+                handleCodeChange={this.handleTermsChange}
                 className="microgrammarInput" />
         </div>
     }
@@ -34,6 +43,7 @@ export class MicrogrammarInput extends React.Component<{
 
 export type MicrogrammarInputProps = {
     microgrammarString: string,
+    terms: string,
     matchName: string,
     rootName: string,
 };
@@ -41,7 +51,12 @@ export type MicrogrammarInputProps = {
 export const init: MicrogrammarInputProps = {
     microgrammarString: "<${first}><${second}>",
     matchName: "mg",
-    rootName: "root"
+    rootName: "root",
+    terms: `{
+    first: /[a-zA-Z0-9]+/,
+    second: /[a-zA-Z0-9]+/
+}`
+
 };
 
 export const initialPathExpression = "/root/mg";

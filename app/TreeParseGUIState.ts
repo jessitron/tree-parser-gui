@@ -11,6 +11,7 @@ export type MicrogrammarParserSpec = {
     microgrammarString: string,
     matchName: string,
     rootName: string,
+    terms: string,
 }
 
 type HasPathExpression = {

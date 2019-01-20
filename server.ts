@@ -108,6 +108,8 @@ function fromParserSpec(ps: ParserSpec): FileParser {
 
       console.log("Received mg string: " + ps.microgrammarString);
 
+      console.log("Received terms: " + ps.terms)
+
       const mg = Microgrammar.fromString(ps.microgrammarString, {
         // TODO: these terms should be passed in
         first: /[a-zA-Z0-9]+/,
