@@ -111,6 +111,7 @@ export class TreeParseGUI extends React.Component<{},
               parserInput={this.state.parserInput}
               updateFn={this.handleParserInputChange}
               highlightFn={this.highlightFn}
+              errorResponse={this.state.error}
             />
           </div>
           <Tree

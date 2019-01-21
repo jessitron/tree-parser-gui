@@ -1,7 +1,7 @@
 import React from 'react';
 import { Radio, FormControlLabel, FormControl, FormLabel, RadioGroup } from "@material-ui/core";
 import { CodeDisplay } from './codeDisplay';
-import { ParserInputProps, PathExpressionByParserKind } from '../../TreeParseGUIState';
+import { ParserInputProps, PathExpressionByParserKind, ErrorResponse } from '../../TreeParseGUIState';
 import { HighlightFunction } from './highlightCode';
 import { MicrogrammarInput, MicrogrammarInputProps } from '../MicrogrammarInput';
 import { PathExpressionInput } from '../PathExpressionInput';
@@ -10,6 +10,7 @@ import { PathExpressionInput } from '../PathExpressionInput';
 export type AllParserInputProps = {
   parserInput: ParserInputProps,
   highlightFn: HighlightFunction,
+  errorResponse?: ErrorResponse,
   updateFn: (dtp: Partial<ParserInputProps>) => Promise<void>,
 }
 
@@ -82,7 +83,8 @@ export class ParserInput extends React.Component<AllParserInputProps, {}> {
             </FormControl>
             <MicrogrammarInput parserKind={this.props.parserInput.parserKind}
               microgrammarInputProps={this.props.parserInput.microgrammarInput}
-              handleChange={this.handleMicrogrammarChange} />
+              handleChange={this.handleMicrogrammarChange}
+              errorResponse={this.props.errorResponse} />
             <PathExpressionInput
               pathExpression={this.props.parserInput.pathExpression[
                 this.props.parserInput.parserKind]}

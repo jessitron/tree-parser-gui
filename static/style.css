@@ -97,7 +97,7 @@
   text-decoration: underline overline darkgoldenrod;
 }
 
-.error-display {
+.top-error-display {
   color: red;
 }
 
@@ -114,4 +114,24 @@
 
 #pathExpressionInput {
   width: 100%
+}
+
+.error-display {
+  position: relative;
+  background: pink;
+  color:black;
+    margin-top: 10px;
+    border: 1px solid deeppink;
+}
+
+.error-display::before {
+  content: "";
+  position: absolute;
+    top: -.4em; left: 1em;
+    padding: .35em;
+    background: inherit;
+    border: inherit;
+    border-right: 0;
+    border-bottom: 0;
+    transform: rotate(45deg);
 }

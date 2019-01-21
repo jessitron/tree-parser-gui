@@ -5,10 +5,10 @@ import express from 'express';
 import { AddressInfo } from 'net';
 var app = express();
 var pj = require('./package.json');
-import { Microgrammar, microgrammar, TermsDefinition, zeroOrMore, isPatternMatch } from "@atomist/microgrammar";
+import { Microgrammar, microgrammar, TermsDefinition, zeroOrMore, isPatternMatch, optional } from "@atomist/microgrammar";
 import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
 import { InMemoryProjectFile, InMemoryProject } from '@atomist/automation-client';
-import { DataToParse, ParserSpec, ParseResponse, KnownErrorLocation } from './app/TreeParseGUIState';
+import { DataToParse, ParserSpec, ParseResponse, KnownErrorLocation, ErrorResponse } from './app/TreeParseGUIState';
 import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
 import stringify from "json-stringify-safe";
@@ -66,7 +66,9 @@ app.post("/parse", async (req, response) => {
     const parseResponse: ParseResponse = { ast: noncircularAst };
     response.send(parseResponse);
   } catch (e) {
-    response.send({ error: { message: e.message, complainsAbout: e.complainsAbout } })
+    console.error(e.stack);
+    const result: ErrorResponse = { error: { message: e.message, complainAbout: e.where } }
+    response.send(result);
   }
 });
 
@@ -127,7 +129,8 @@ function parseTerms(input: string): TermsDefinition<any> {
   const termGrammar = microgrammar({
     phrase: `{ \${termses} }`, terms: {
       termses: zeroOrMore(`\${term}`),
-      term: `\${termName}: \${stringLiteral}`,
+      term: `\${termName} : \${stringLiteral} \${possibleComma} `,
+      possibleComma: optional(","),
       stringLiteral: `"..."`,
     }
   });
