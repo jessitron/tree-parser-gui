@@ -5,10 +5,10 @@ import express from 'express';
 import { AddressInfo } from 'net';
 var app = express();
 var pj = require('./package.json');
-import { Microgrammar } from "@atomist/microgrammar";
+import { Microgrammar, microgrammar, TermsDefinition, zeroOrMore, isPatternMatch } from "@atomist/microgrammar";
 import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
 import { InMemoryProjectFile, InMemoryProject } from '@atomist/automation-client';
-import { DataToParse, ParserSpec, ParseResponse } from './app/TreeParseGUIState';
+import { DataToParse, ParserSpec, ParseResponse, KnownErrorLocation } from './app/TreeParseGUIState';
 import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
 import stringify from "json-stringify-safe";
@@ -66,7 +66,7 @@ app.post("/parse", async (req, response) => {
     const parseResponse: ParseResponse = { ast: noncircularAst };
     response.send(parseResponse);
   } catch (e) {
-    response.send({ error: { message: e.message } })
+    response.send({ error: { message: e.message, complainsAbout: e.complainsAbout } })
   }
 });
 
@@ -105,18 +105,16 @@ function condenseSingleChild(tn: TreeNode) {
 function fromParserSpec(ps: ParserSpec): FileParser {
   switch (ps.kind) {
     case "microgrammar":
-
       console.log("Received mg string: " + ps.microgrammarString);
-
       console.log("Received terms: " + ps.terms)
 
-      const mg = Microgrammar.fromString(ps.microgrammarString, {
-        // TODO: these terms should be passed in
-        first: /[a-zA-Z0-9]+/,
-        second: /[a-zA-Z0-9]+/,
+      const terms = parseTerms(ps.terms);
+
+      const mg = microgrammar({
+        phrase: ps.microgrammarString, terms: terms
       });
 
-      return new MicrogrammarBasedFileParser("root", ps.matchName, mg);
+      return new MicrogrammarBasedFileParser("root", ps.matchName, mg as Microgrammar<any>);
     case "Java9":
       return Java9FileParser;
     case "Markdown":
@@ -124,3 +122,32 @@ function fromParserSpec(ps: ParserSpec): FileParser {
   }
 }
 
+function parseTerms(input: string): TermsDefinition<any> {
+
+  const termGrammar = microgrammar({
+    phrase: `{ \${termses} }`, terms: {
+      termses: zeroOrMore(`\${term}`),
+      term: `\${termName}: \${stringLiteral}`,
+      stringLiteral: `"..."`,
+    }
+  });
+
+  const match = termGrammar.exactMatch(input);
+
+  if (isPatternMatch(match)) {
+    // TODO: pay attention to the output
+    return {
+      first: /[a-zA-Z0-9]+/,
+      second: /[a-zA-Z0-9]+/,
+    }
+  }
+
+  throw new LocalizedError("microgrammar terms", match.description);
+
+}
+
+class LocalizedError extends Error {
+  constructor(public readonly where: KnownErrorLocation, message: string) {
+    super(message);
+  }
+}

@@ -46,7 +46,15 @@ export type TreeParseGUIState =
         parserInput: ParserInputProps,
     }
 
-export type ErrorResponse = { error: { message: string } };
+export type ErrorResponse = {
+    error: {
+        message: string,
+        complainAbout?: KnownErrorLocation
+    }
+};
+
+export type KnownErrorLocation = "path expression" | "code parse" | "microgrammar terms";
+
 export type ParseResponse = { ast: AST } | ErrorResponse;
 
 export function isErrorResponse(pr: ParseResponse): pr is ErrorResponse {
