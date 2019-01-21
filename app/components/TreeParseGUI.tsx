@@ -125,13 +125,17 @@ export class TreeParseGUI extends React.Component<{},
 
 
 async function getTree(dataToParse: DataToParse): Promise<ParseResponse> {
-  const response = await fetch('/parse', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify(dataToParse), // body data type must match "Content-Type" header
-  });
-  const json = await response.json();
-  return json as ParseResponse;
+  try {
+    const response = await fetch('/parse', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(dataToParse), // body data type must match "Content-Type" header
+    });
+    const json = await response.json();
+    return json as ParseResponse;
+  } catch (e) {
+    return { error: { message: e.message } }
+  }
 }
