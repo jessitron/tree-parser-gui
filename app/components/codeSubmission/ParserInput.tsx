@@ -102,5 +102,4 @@ export class ParserInput extends React.Component<AllParserInputProps, {}> {
       </div>
     );
   }
-
 }

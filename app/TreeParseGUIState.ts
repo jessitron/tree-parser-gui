@@ -49,7 +49,8 @@ export type TreeParseGUIState =
 export type ErrorResponse = {
     error: {
         message: string,
-        complainAbout?: KnownErrorLocation
+        complainAbout?: KnownErrorLocation,
+        tree?: TreeNode,
     }
 };
 

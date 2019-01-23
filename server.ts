@@ -7,7 +7,7 @@ var app = express();
 var pj = require('./package.json');
 import { Microgrammar, microgrammar, TermsDefinition, zeroOrMore, isPatternMatch, optional } from "@atomist/microgrammar";
 import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
-import { InMemoryProjectFile, InMemoryProject } from '@atomist/automation-client';
+import { InMemoryProject } from '@atomist/automation-client';
 import { DataToParse, ParserSpec, ParseResponse, KnownErrorLocation, ErrorResponse } from './app/TreeParseGUIState';
 import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
 import { TreeNode } from '@atomist/tree-path';
@@ -15,6 +15,9 @@ import stringify from "json-stringify-safe";
 import { findMatches } from '@atomist/automation-client/lib/tree/ast/astUtils';
 import { Java9FileParser } from "@atomist/antlr";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
+import { DismatchReport } from '@atomist/microgrammar/lib/PatternMatch';
+import { MatchFailureReport } from '@atomist/microgrammar/lib/MatchPrefixResult';
+import { regexLiteral } from "@atomist/microgrammar/lib/matchers/lang/cfamily/javascript/regexpLiteral";
 
 
 // http://expressjs.com/en/starter/static-files.html
@@ -67,7 +70,14 @@ app.post("/parse", async (req, response) => {
     response.send(parseResponse);
   } catch (e) {
     console.error(e.stack);
-    const result: ErrorResponse = { error: { message: e.message, complainAbout: e.where } }
+    const result: ErrorResponse = {
+      error:
+      {
+        message: e.message,
+        complainAbout: e.where,
+        tree: e.tree,
+      }
+    }
     response.send(result);
   }
 });
@@ -128,10 +138,13 @@ function parseTerms(input: string): TermsDefinition<any> {
 
   const termGrammar = microgrammar({
     phrase: `{ \${termses} }`, terms: {
-      termses: zeroOrMore(`\${term}`),
-      term: `\${termName} : \${stringLiteral} \${possibleComma} `,
-      possibleComma: optional(","),
-      stringLiteral: `"..."`,
+      termses: zeroOrMore(microgrammar({
+        phrase: `\${termName} : \${stringLiteral} \${possibleComma} `,
+        terms: {
+          possibleComma: optional(","),
+          stringLiteral: regexLiteral(),
+        },
+      })),
     }
   });
 
@@ -145,12 +158,32 @@ function parseTerms(input: string): TermsDefinition<any> {
     }
   }
 
-  throw new LocalizedError("microgrammar terms", match.description);
+  throw new LocalizedError("microgrammar terms", match.description, mfrToTree(match));
 
 }
 
+function mfrToTree(report: DismatchReport): TreeNode {
+  const mfr = report as MatchFailureReport;
+
+  return {
+    $name: formatName(mfr),
+    $value: mfr.$matched,
+    $offset: mfr.$offset,
+    $children: (mfr.children || []).map(mfrToTree),
+  }
+}
+
+function formatName(m: MatchFailureReport): string {
+  let output = m.$matcherId;
+  if (m.cause) {
+    output += " cuz: " + m.cause;
+  }
+  return output
+}
+
 class LocalizedError extends Error {
-  constructor(public readonly where: KnownErrorLocation, message: string) {
+  constructor(public readonly where: KnownErrorLocation,
+    message: string, public readonly tree?: TreeNode) {
     super(message);
   }
 }

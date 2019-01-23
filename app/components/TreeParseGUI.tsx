@@ -2,7 +2,7 @@ import React from 'react';
 import { ParserInput } from './codeSubmission/ParserInput';
 import { Tree } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
-import { TreeParseGUIState, DataToParse, AST, ParseResponse, isErrorResponse, ParserInputProps } from '../TreeParseGUIState';
+import { TreeParseGUIState, DataToParse, ParseResponse, isErrorResponse, ParserInputProps } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
 import * as _ from "lodash";
 import { AppBar, Typography } from '@material-ui/core/';
@@ -115,14 +115,14 @@ export class TreeParseGUI extends React.Component<{},
             />
           </div>
           <Tree
-            ast={this.state.ast} />
+            ast={this.state.ast}
+            error={this.state.error} />
         </div>
         <p style={{ color: "white" }}>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
       </div>
     );
   }
 }
-
 
 async function getTree(dataToParse: DataToParse): Promise<ParseResponse> {
   try {
