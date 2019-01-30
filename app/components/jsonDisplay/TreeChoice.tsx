@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, RadioGroup } from "@material-ui/core";
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@material-ui/core";
 import React from "react";
 import { ThemeKeys } from "react-json-view";
 import { TreeChoices, TreeParseGUIState } from "../../TreeParseGUIState";
@@ -25,7 +25,7 @@ export function howToDisplayTree(tpgs: TreeParseGUIState, tc: TreeChoices): HowT
 
 export function TreeChoice(props: {
     treeToDisplay: TreeChoices,
-    chooseTree: (tc: TreeChoices) => void,
+    chooseTree: (event: React.ChangeEvent, tc: TreeChoices) => void,
 }) {
 
     const availableChoices = [
@@ -38,8 +38,20 @@ export function TreeChoice(props: {
         <RadioGroup
             key="tree-display-choice"
             value={props.treeToDisplay}
-            onChange={this.props.chooseTree}>
-            {this.radioInputs("treeChoice", availableChoices)}
+            onChange={props.chooseTree}>
+            {radioInputs("treeChoice", availableChoices)}
         </RadioGroup>
     </FormControl>;
+}
+
+function radioInputs(name, valueAndLabelses) {
+    const oneInput = (value, label) => {
+        return <FormControlLabel
+            value={value} name={name}
+            control={<Radio color="primary" />}
+            label={label}
+            color="white"
+            key={value} />;
+    };
+    return valueAndLabelses.map((o) => oneInput(o.value, o.label));
 }

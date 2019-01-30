@@ -8,7 +8,8 @@
         "no-console": false,
         "interface-name": false,
         "object-literal-sort-keys": false,
-        "member-ordering": false
+        "member-ordering": false,
+        "no-invalid-this": true
     },
     "rulesDirectory": []
 }

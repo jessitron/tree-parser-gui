@@ -75,7 +75,7 @@ export class TreeParseGUI extends React.Component<{},
     this.updateTree();
   }
 
-  public updateChosenTree(tc: TreeChoices) {
+  public updateChosenTree = async (event: React.ChangeEvent, tc: TreeChoices) => {
     this.setState((s) => ({ treeToDisplay: tc }));
   }
 
