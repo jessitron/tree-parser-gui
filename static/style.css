@@ -67,7 +67,7 @@
     border-radius: 10px;
     box-shadow: -5px 5px 5px darkgoldenrod;
     margin: 1em;
-    display: none; /* The debug window is not useful at the moment */
+    /* display: none; The debug window is not useful at the moment */
 }
 
 /* the left of the screen: accept entry of code or display the code */

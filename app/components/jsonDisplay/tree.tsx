@@ -1,38 +1,19 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
-import { AST, ErrorResponse } from '../../TreeParseGUIState';
 import _ from 'lodash';
 
-export class Tree extends React.Component<{ ast: AST, error?: ErrorResponse }, {}>{
+export enum Theme {
+    anger = "apathy: inverted",
+    normal = "apathy",
+}
+
+export class Tree extends React.Component<{ treeToRender: any, theme?: Theme }, {}>{
     constructor(props) {
         super(props);
     }
 
-    isAstPopulated() {
-        return this.props.ast && this.props.ast.length > 0
-    }
-
-    isErrorTreePopulated() {
-        return !!_.get(this.props, "error.error.tree")
-    }
-
-    treeToRender() {
-        if (this.isAstPopulated()) {
-            return this.props.ast;
-        }
-        if (this.isErrorTreePopulated()) {
-            return this.props.error.error.tree;
-        }
-        return [];
-    }
-
-    theme() {
-        if (this.isAstPopulated()) {
-            return "apathy";
-        } else if (this.isErrorTreePopulated()) {
-            return "apathy:inverted";
-        }
-        return "apathy";
+    theme(): string {
+        return this.props.theme || Theme.normal
     }
 
     render() {
@@ -40,8 +21,8 @@ export class Tree extends React.Component<{ ast: AST, error?: ErrorResponse }, {
             <div className="preview"
                 style={{ width: "50%" }}>
                 <ReactJson
-                    src={this.treeToRender()}
-                    theme={this.theme()}
+                    src={this.props.treeToRender}
+                    theme={this.theme() as any}
                     displayDataTypes={false}
                     enableClipboard={false}
                     onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}

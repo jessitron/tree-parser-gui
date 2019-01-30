@@ -1,6 +1,6 @@
 import React from 'react';
 import { ParserInput } from './codeSubmission/ParserInput';
-import { Tree } from './jsonDisplay/tree';
+import { Tree, Theme } from './jsonDisplay/tree';
 import { TalkOutLoud } from './TalkOutLoud';
 import { TreeParseGUIState, DataToParse, ParseResponse, isErrorResponse, ParserInputProps } from '../TreeParseGUIState';
 import { HighlightFunction, highlightFromAst } from './codeSubmission/highlightCode';
@@ -90,7 +90,15 @@ export class TreeParseGUI extends React.Component<{},
     }
   }
 
+
   render() {
+
+    const treeChoice = {
+      treeToRender: this.state.ast,
+      theme: Theme.normal
+    };
+
+
     console.log("rendering hello");
     return (
       <div className="gooeyOutside">
@@ -115,8 +123,8 @@ export class TreeParseGUI extends React.Component<{},
             />
           </div>
           <Tree
-            ast={this.state.ast}
-            error={this.state.error} />
+            treeToRender={treeChoice.treeToRender}
+            theme={treeChoice.theme} />
         </div>
         <p style={{ color: "white" }}>Working with @atomist/antlr version: {this.state.deps["@atomist/antlr"]}</p>
       </div>
