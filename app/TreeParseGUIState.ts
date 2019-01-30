@@ -35,15 +35,15 @@ export interface ParserInputProps {
 }
 
 export interface TreeParseGUIState {
-        deps: string[];
-        selectedWords: string[];
-        selectedRanges: object[];
-        displayCode: boolean;
-        ast: AST;
-        error?: ErrorResponse;
-        parserInput: ParserInputProps;
-        treeToDisplay: TreeChoices;
-    }
+    deps: string[];
+    selectedWords: string[];
+    selectedRanges: object[];
+    displayCode: boolean;
+    ast: AST;
+    error?: ErrorResponse;
+    parserInput: ParserInputProps;
+    chosenTree: TreeChoices;
+}
 
 export enum TreeChoices {
     ast = "parseThis",

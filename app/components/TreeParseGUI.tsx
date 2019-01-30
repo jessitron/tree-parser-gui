@@ -9,7 +9,7 @@ import { highlightFromAst, HighlightFunction } from "./codeSubmission/highlightC
 import { ParserInput } from "./codeSubmission/ParserInput";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { Tree } from "./jsonDisplay/tree";
-import { howToDisplayTree, TreeChoice } from "./jsonDisplay/TreeChoice";
+import { availableTreeChoices, effectiveTreeChoice, howToDisplayTree, TreeChoice } from "./jsonDisplay/TreeChoice";
 import * as MicrogrammarInput from "./MicrogrammarInput";
 import { TalkOutLoud } from "./TalkOutLoud";
 
@@ -35,7 +35,7 @@ export class TreeParseGUI extends React.Component<{},
         },
       },
       ast: [],
-      treeToDisplay: TreeChoices.ast,
+      chosenTree: TreeChoices.ast,
     };
   }
 
@@ -76,7 +76,7 @@ export class TreeParseGUI extends React.Component<{},
   }
 
   public updateChosenTree = async (event: React.ChangeEvent, tc: TreeChoices) => {
-    this.setState((s) => ({ treeToDisplay: tc }));
+    this.setState((s) => ({ chosenTree: tc }));
   }
 
   public highlightFn: HighlightFunction = (lineFrom0: number, charFrom0: number) =>
@@ -101,7 +101,9 @@ export class TreeParseGUI extends React.Component<{},
 
   public render() {
 
-    const treeChoice = howToDisplayTree(this.state, this.state.treeToDisplay);
+    const treeToDisplay = effectiveTreeChoice(this.state);
+
+    const treeChoice = howToDisplayTree(this.state, treeToDisplay);
 
     console.log("rendering hello");
     return (
@@ -128,7 +130,8 @@ export class TreeParseGUI extends React.Component<{},
           </div>
           <div className="preview"
             style={{ width: "50%" }}>
-            <TreeChoice treeToDisplay={this.state.treeToDisplay}
+            <TreeChoice treeToDisplay={treeToDisplay}
+              availableChoices={availableTreeChoices(this.state)}
               chooseTree={this.updateChosenTree} />
             <Tree
               treeToRender={treeChoice.treeToRender}

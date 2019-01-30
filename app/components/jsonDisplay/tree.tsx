@@ -23,4 +23,3 @@ export class Tree extends React.Component<{ treeToRender: any, theme: ThemeKeys 
         );
     }
 }
-// TODO next: just try it jess and see if it renders an error tree
