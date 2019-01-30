@@ -43,6 +43,7 @@ export class Tree extends React.Component<{ ast: AST, error?: ErrorResponse }, {
                     src={this.treeToRender()}
                     theme={this.theme()}
                     displayDataTypes={false}
+                    enableClipboard={false}
                     onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
                 />
             </div>
