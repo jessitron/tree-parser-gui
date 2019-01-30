@@ -1,17 +1,16 @@
-import React from 'react';
-import { Radio, FormControlLabel, FormControl, FormLabel, RadioGroup } from "@material-ui/core";
-import { CodeDisplay } from './codeDisplay';
-import { ParserInputProps, PathExpressionByParserKind, ErrorResponse } from '../../TreeParseGUIState';
-import { HighlightFunction } from './highlightCode';
-import { MicrogrammarInput, MicrogrammarInputProps } from '../MicrogrammarInput';
-import { PathExpressionInput } from '../PathExpressionInput';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@material-ui/core";
+import React from "react";
+import { ErrorResponse, ParserInputProps, PathExpressionByParserKind } from "../../TreeParseGUIState";
+import { MicrogrammarInput, MicrogrammarInputProps } from "../MicrogrammarInput";
+import { PathExpressionInput } from "../PathExpressionInput";
+import { CodeDisplay } from "./codeDisplay";
+import { HighlightFunction } from "./highlightCode";
 
-
-export type AllParserInputProps = {
-  parserInput: ParserInputProps,
-  highlightFn: HighlightFunction,
-  errorResponse?: ErrorResponse,
-  updateFn: (dtp: Partial<ParserInputProps>) => Promise<void>,
+export interface AllParserInputProps {
+  parserInput: ParserInputProps;
+  highlightFn: HighlightFunction;
+  errorResponse?: ErrorResponse;
+  updateFn: (dtp: Partial<ParserInputProps>) => Promise<void>;
 }
 
 const availableParsers = [{ value: "Java9", label: "Java" },
@@ -24,52 +23,52 @@ export class ParserInput extends React.Component<AllParserInputProps, {}> {
     super(props);
   }
 
-  handleCodeChange = (code: string) => {
-    this.props.updateFn({ code })
+  public handleCodeChange = (code: string) => {
+    this.props.updateFn({ code });
   }
 
-  handleParserChoiceChange = (event, parserChoice) => {
-    this.props.updateFn({ parserKind: parserChoice })
+  public handleParserChoiceChange = (event, parserChoice) => {
+    this.props.updateFn({ parserKind: parserChoice });
   }
 
-  handleMicrogrammarChange = (microgrammarInput: MicrogrammarInputProps) => {
+  public handleMicrogrammarChange = (microgrammarInput: MicrogrammarInputProps) => {
     return this.props.updateFn({
-      microgrammarInput
+      microgrammarInput,
     });
   }
 
-  handlePathExpressionChange = (pathExpression: string) => {
+  public handlePathExpressionChange = (pathExpression: string) => {
     const pxe: Partial<PathExpressionByParserKind> = {};
     pxe[this.props.parserInput.parserKind] = pathExpression;
     return this.props.updateFn({
-      pathExpression: pxe
-    } as any)
+      pathExpression: pxe,
+    } as any);
   }
 
-  handleSubmit = (event) => {
-    console.log('You pushed submit.');
+  public handleSubmit = (event) => {
+    console.log("You pushed submit.");
     event.preventDefault();
   }
 
-  radioInputs(name, valueAndLabelses) {
+  public radioInputs(name, valueAndLabelses) {
     const oneInput = (value, label) => {
       return <FormControlLabel
         value={value} name={name}
         control={<Radio color="primary" />}
         label={label}
         color="white"
-        key={value} />
-    }
-    return valueAndLabelses.map(o => oneInput(o.value, o.label));
+        key={value} />;
+    };
+    return valueAndLabelses.map((o) => oneInput(o.value, o.label));
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <div className="essayForm"
           style={{ width: "100%", backgroundColor: "'#172330'" }}>
           <form
-            style={{ backgroundColor: '#172330' }}
+            style={{ backgroundColor: "#172330" }}
             onSubmit={this.handleSubmit}
           >
             <FormControl>

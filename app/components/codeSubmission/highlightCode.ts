@@ -1,8 +1,8 @@
 import { AST } from "../../TreeParseGUIState";
 
-export type HighlightInstruction = SomeChars | WeAreDoneHere
+export type HighlightInstruction = SomeChars | WeAreDoneHere;
 
-type SomeChars = { eatChars: number, className: string | null }
+interface SomeChars { eatChars: number; className: string | null; }
 
 type WeAreDoneHere = "we are done here";
 
@@ -10,7 +10,7 @@ export function areWeDone(hi: HighlightInstruction): hi is WeAreDoneHere {
     return hi === "we are done here";
 }
 
-export type HighlightFunction = (lineFrom0: number, charFrom0: number) => HighlightInstruction
+export type HighlightFunction = (lineFrom0: number, charFrom0: number) => HighlightInstruction;
 
 export function highlightFromAst(
     code: string,
@@ -22,7 +22,7 @@ export function highlightFromAst(
     const offset = offsetInFile(code, lineFrom0, charFrom0);
 
     // I would rather do this once per update, but sad day.
-    const highlightMatches = ast.map(match => ({
+    const highlightMatches = ast.map((match) => ({
         begin: match.$offset,
         length: match.$value.length,
     }));
@@ -31,17 +31,17 @@ export function highlightFromAst(
         return "we are done here";
     }
 
-    const startingMatch = highlightMatches.find(m => m.begin === offset);
+    const startingMatch = highlightMatches.find((m) => m.begin === offset);
     if (startingMatch) {
-        return { eatChars: startingMatch.length, className: "match" }
+        return { eatChars: startingMatch.length, className: "match" };
     }
-    const midMatch = highlightMatches.find(m => m.begin < offset && offset < (m.begin + m.length))
+    const midMatch = highlightMatches.find((m) => m.begin < offset && offset < (m.begin + m.length));
     if (midMatch) {
-        return { eatChars: midMatch.begin + midMatch.length - offset, className: "match" }
+        return { eatChars: midMatch.begin + midMatch.length - offset, className: "match" };
     }
-    const nextMatch = highlightMatches.find(m => m.begin > offset);
+    const nextMatch = highlightMatches.find((m) => m.begin > offset);
     if (nextMatch) {
-        return { eatChars: nextMatch.begin - offset, className: null }
+        return { eatChars: nextMatch.begin - offset, className: null };
     }
 
     const lastMatch = highlightMatches[highlightMatches.length - 1];

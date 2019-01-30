@@ -1,39 +1,38 @@
 // server.js
 
 // init project
-import express from 'express';
-import { AddressInfo } from 'net';
-var app = express();
-var pj = require('./package.json');
-import { Microgrammar, microgrammar, TermsDefinition, zeroOrMore, isPatternMatch, optional } from "@atomist/microgrammar";
-import { MicrogrammarBasedFileParser } from '@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser';
-import { InMemoryProject } from '@atomist/automation-client';
-import { DataToParse, ParserSpec, ParseResponse, KnownErrorLocation, ErrorResponse } from './app/TreeParseGUIState';
-import { FileParser } from '@atomist/automation-client/lib/tree/ast/FileParser';
-import { TreeNode } from '@atomist/tree-path';
-import stringify from "json-stringify-safe";
-import { findMatches } from '@atomist/automation-client/lib/tree/ast/astUtils';
+import express from "express";
+import { AddressInfo } from "net";
+let app = express();
+let pj = require("./package.json");
 import { Java9FileParser } from "@atomist/antlr";
-import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
-import { DismatchReport } from '@atomist/microgrammar/lib/PatternMatch';
-import { MatchFailureReport } from '@atomist/microgrammar/lib/MatchPrefixResult';
+import { InMemoryProject } from "@atomist/automation-client";
+import { findMatches } from "@atomist/automation-client/lib/tree/ast/astUtils";
+import { FileParser } from "@atomist/automation-client/lib/tree/ast/FileParser";
+import { MicrogrammarBasedFileParser } from "@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser";
+import { isPatternMatch, Microgrammar, microgrammar, optional, TermsDefinition, zeroOrMore } from "@atomist/microgrammar";
 import { regexLiteral } from "@atomist/microgrammar/lib/matchers/lang/cfamily/javascript/regexpLiteral";
-
+import { MatchFailureReport } from "@atomist/microgrammar/lib/MatchPrefixResult";
+import { DismatchReport } from "@atomist/microgrammar/lib/PatternMatch";
+import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
+import { TreeNode } from "@atomist/tree-path";
+import stringify from "json-stringify-safe";
+import { DataToParse, ErrorResponse, KnownErrorLocation, ParseResponse, ParserSpec } from "./app/TreeParseGUIState";
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('static'));
-app.use(express.static('public'));
+app.use(express.static("static"));
+app.use(express.static("public"));
 
 app.use(express.json()); // do things right
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/app/index.html');
+app.get("/", function(request, response) {
+  response.sendFile(__dirname + "/app/index.html");
 });
 
 // listen for requests :)
-var listener = app.listen(5000, function () {
-  console.log('Your app is listening on port ' + (listener.address() as AddressInfo).port);
+let listener = app.listen(5000, function() {
+  console.log("Your app is listening on port " + (listener.address() as AddressInfo).port);
 });
 
 app.get("/dependencies", (req, res) => {
@@ -76,8 +75,8 @@ app.post("/parse", async (req, response) => {
         message: e.message,
         complainAbout: e.where,
         tree: e.tree,
-      }
-    }
+      },
+    };
     response.send(result);
   }
 });
@@ -90,7 +89,7 @@ function simplifyTree(tnin: TreeNode): TreeNode {
     $offset: tn.$offset,
     $value: tn.$value || "",
     $children: children,
-  }
+  };
   return output;
 }
 
@@ -101,8 +100,8 @@ function condenseSingleChild(tn: TreeNode) {
       $children: condenseChild.$children,
       $value: tn.$value,
       $name: `${tn.$name}/${condenseChild.$name}`,
-      $offset: tn.$offset
-    }
+      $offset: tn.$offset,
+    };
   }
 
   return {
@@ -110,20 +109,19 @@ function condenseSingleChild(tn: TreeNode) {
     $name: tn.$name,
     $offset: tn.$offset,
     $value: tn.$value,
-  }
+  };
 }
-
 
 function fromParserSpec(ps: ParserSpec): FileParser {
   switch (ps.kind) {
     case "microgrammar":
       console.log("Received mg string: " + ps.microgrammarString);
-      console.log("Received terms: " + ps.terms)
+      console.log("Received terms: " + ps.terms);
 
       const terms = parseTerms(ps.terms);
 
       const mg = microgrammar({
-        phrase: ps.microgrammarString, terms: terms
+        phrase: ps.microgrammarString, terms,
       });
 
       return new MicrogrammarBasedFileParser("root", ps.matchName, mg as Microgrammar<any>);
@@ -145,7 +143,7 @@ function parseTerms(input: string): TermsDefinition<any> {
           stringLiteral: regexLiteral(),
         },
       })),
-    }
+    },
   });
 
   const match = termGrammar.exactMatch(input);
@@ -155,7 +153,7 @@ function parseTerms(input: string): TermsDefinition<any> {
     return {
       first: /[a-zA-Z0-9]+/,
       second: /[a-zA-Z0-9]+/,
-    }
+    };
   }
 
   throw new LocalizedError("microgrammar terms", match.description, mfrToTree(match));
@@ -170,7 +168,7 @@ function mfrToTree(report: DismatchReport): TreeNode {
     $value: mfr.$matched,
     $offset: mfr.$offset,
     $children: (mfr.children || []).map(mfrToTree),
-  }
+  };
 }
 
 function formatName(m: MatchFailureReport): string {
@@ -178,12 +176,12 @@ function formatName(m: MatchFailureReport): string {
   if (m.cause) {
     output += " cuz: " + m.cause;
   }
-  return output
+  return output;
 }
 
 class LocalizedError extends Error {
   constructor(public readonly where: KnownErrorLocation,
-    message: string, public readonly tree?: TreeNode) {
+              message: string, public readonly tree?: TreeNode) {
     super(message);
   }
 }

@@ -1,36 +1,36 @@
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createMuiTheme} from "@material-ui/core/styles";
 
 export default createMuiTheme({
     palette: {
         primary: {
-            main: '#227F7E',
-        }, 
+            main: "#227F7E",
+        },
         secondary: {
-            main: '#5bc399'
-        }
+            main: "#5bc399",
+        },
     },
     typography: {
         title: {
-            color: 'white'
-        }
+            color: "white",
+        },
     },
     overrides: {
         MuiFormLabel: {
-            root: {color: 'white'},
+            root: {color: "white"},
         },
         MuiFormControlLabel: {
-            label: {color: 'white'},
+            label: {color: "white"},
         },
         MuiRadio: {
             root: {
-                color: '#227F7E'
+                color: "#227F7E",
             },
         },
         MuiButton: {
             containedPrimary: {
-                backgroundColor: '#5bc399',
-                fontWeight: 'bold'
-            }
+                backgroundColor: "#5bc399",
+                fontWeight: "bold",
+            },
         },
-    }
-}) 
+    },
+});

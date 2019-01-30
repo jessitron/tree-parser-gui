@@ -1,33 +1,25 @@
-import React from 'react';
-import ReactJson from 'react-json-view';
-import _ from 'lodash';
+import _ from "lodash";
+import React from "react";
+import ReactJson, { ThemeKeys } from "react-json-view";
 
-export enum Theme {
-    anger = "apathy: inverted",
-    normal = "apathy",
-}
-
-export class Tree extends React.Component<{ treeToRender: any, theme?: Theme }, {}>{
+export class Tree extends React.Component<{ treeToRender: any, theme: ThemeKeys }, {}> {
     constructor(props) {
         super(props);
     }
 
-    theme(): string {
-        return this.props.theme || Theme.normal
+    public theme(): string {
+        return this.props.theme;
     }
 
-    render() {
+    public render() {
         return (
-            <div className="preview"
-                style={{ width: "50%" }}>
-                <ReactJson
-                    src={this.props.treeToRender}
-                    theme={this.theme() as any}
-                    displayDataTypes={false}
-                    enableClipboard={false}
-                    onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
-                />
-            </div>
+            <ReactJson
+                src={this.props.treeToRender}
+                theme={this.theme() as any}
+                displayDataTypes={false}
+                enableClipboard={false}
+                onSelect={(select) => console.log("Selected: " + JSON.stringify(select))}
+            />
         );
     }
 }
