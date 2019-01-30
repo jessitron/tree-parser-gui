@@ -1,7 +1,10 @@
 import { AppBar, Typography } from "@material-ui/core/";
 import * as _ from "lodash";
 import React from "react";
-import { DataToParse, isErrorResponse, ParseResponse, ParserInputProps, TreeChoices, TreeParseGUIState } from "../TreeParseGUIState";
+import {
+  DataToParse, isErrorResponse, ParseResponse,
+  ParserInputProps, TreeChoices, TreeParseGUIState,
+} from "../TreeParseGUIState";
 import { highlightFromAst, HighlightFunction } from "./codeSubmission/highlightCode";
 import { ParserInput } from "./codeSubmission/ParserInput";
 import { ErrorDisplay } from "./ErrorDisplay";

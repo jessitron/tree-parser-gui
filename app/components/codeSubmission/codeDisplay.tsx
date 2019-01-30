@@ -30,7 +30,9 @@ export class CodeDisplay extends React.Component<CodeDisplayProps, {}> {
 
     // this works for the first selection, but not multiple
     public hasRange(ranges) {
-        return !(ranges.length > 0 && ranges[0].anchor.ch === ranges[0].head.ch && ranges[0].anchor.line === ranges[0].head.line);
+        return !(ranges.length > 0 &&
+            ranges[0].anchor.ch === ranges[0].head.ch &&
+            ranges[0].anchor.line === ranges[0].head.line);
     }
 
     public render() {

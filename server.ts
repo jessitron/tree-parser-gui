@@ -1,24 +1,30 @@
 // server.js
 
 // init project
-import express from "express";
-import { AddressInfo } from "net";
-let app = express();
-let pj = require("./package.json");
 import { Java9FileParser } from "@atomist/antlr";
 import { InMemoryProject } from "@atomist/automation-client";
 import { findMatches } from "@atomist/automation-client/lib/tree/ast/astUtils";
 import { FileParser } from "@atomist/automation-client/lib/tree/ast/FileParser";
-import { MicrogrammarBasedFileParser } from "@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser";
-import { isPatternMatch, Microgrammar, microgrammar, optional, TermsDefinition, zeroOrMore } from "@atomist/microgrammar";
+import {
+  MicrogrammarBasedFileParser,
+} from "@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser";
+import {
+  isPatternMatch, Microgrammar,
+  microgrammar, optional, TermsDefinition,
+  zeroOrMore,
+} from "@atomist/microgrammar";
 import { regexLiteral } from "@atomist/microgrammar/lib/matchers/lang/cfamily/javascript/regexpLiteral";
 import { MatchFailureReport } from "@atomist/microgrammar/lib/MatchPrefixResult";
 import { DismatchReport } from "@atomist/microgrammar/lib/PatternMatch";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 import { TreeNode } from "@atomist/tree-path";
+import express from "express";
 import stringify from "json-stringify-safe";
+import { AddressInfo } from "net";
 import { DataToParse, ErrorResponse, KnownErrorLocation, ParseResponse, ParserSpec } from "./app/TreeParseGUIState";
+import pj from "./package.json";
 
+const app = express();
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("static"));
 app.use(express.static("public"));
@@ -26,12 +32,12 @@ app.use(express.static("public"));
 app.use(express.json()); // do things right
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(request, response) {
+app.get("/", (request, response) => {
   response.sendFile(__dirname + "/app/index.html");
 });
 
 // listen for requests :)
-let listener = app.listen(5000, function() {
+const listener = app.listen(5000, () => {
   console.log("Your app is listening on port " + (listener.address() as AddressInfo).port);
 });
 
