@@ -1,7 +1,6 @@
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@material-ui/core";
 import React from "react";
 import { ErrorResponse, ParserInputProps, PathExpressionByParserKind } from "../../TreeParseGUIState";
-import { MicrogrammarInput, MicrogrammarInputProps } from "../MicrogrammarInput";
 import { PathExpressionInput } from "../PathExpressionInput";
 import { CodeDisplay } from "./codeDisplay";
 import { HighlightFunction } from "./highlightCode";
@@ -15,7 +14,6 @@ export interface AllParserInputProps {
 
 const availableParsers = [{ value: "Java9", label: "Java" },
 { value: "Markdown", label: "Markdown" },
-{ value: "microgrammar", label: "Microgrammar" },
 ];
 
 export class ParserInput extends React.Component<AllParserInputProps, {}> {
@@ -29,12 +27,6 @@ export class ParserInput extends React.Component<AllParserInputProps, {}> {
 
   public handleParserChoiceChange = (event, parserChoice) => {
     this.props.updateFn({ parserKind: parserChoice });
-  }
-
-  public handleMicrogrammarChange = (microgrammarInput: MicrogrammarInputProps) => {
-    return this.props.updateFn({
-      microgrammarInput,
-    });
   }
 
   public handlePathExpressionChange = (pathExpression: string) => {
@@ -80,10 +72,6 @@ export class ParserInput extends React.Component<AllParserInputProps, {}> {
                 {this.radioInputs("parserChoice", availableParsers)}
               </RadioGroup>
             </FormControl>
-            <MicrogrammarInput parserKind={this.props.parserInput.parserKind}
-              microgrammarInputProps={this.props.parserInput.microgrammarInput}
-              handleChange={this.handleMicrogrammarChange}
-              errorResponse={this.props.errorResponse} />
             <PathExpressionInput
               pathExpression={this.props.parserInput.pathExpression[
                 this.props.parserInput.parserKind]}

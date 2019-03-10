@@ -10,7 +10,6 @@ import { ParserInput } from "./codeSubmission/ParserInput";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { Tree } from "./jsonDisplay/tree";
 import { availableTreeChoices, effectiveTreeChoice, howToDisplayTree, TreeChoice } from "./jsonDisplay/TreeChoice";
-import * as MicrogrammarInput from "./MicrogrammarInput";
 import { TalkOutLoud } from "./TalkOutLoud";
 
 /* the main page for the index route of this app */
@@ -26,10 +25,8 @@ export class TreeParseGUI extends React.Component<{},
       displayCode: false,
       parserInput: {
         code: "blah<other><thing> haha",
-        parserKind: "microgrammar",
-        microgrammarInput: MicrogrammarInput.init,
+        parserKind: "Java9",
         pathExpression: {
-          microgrammar: MicrogrammarInput.initialPathExpression,
           Java9: "/compilationUnit",
           Markdown: "/root/*",
         },
@@ -53,10 +50,7 @@ export class TreeParseGUI extends React.Component<{},
 
   public updateTree = _.debounce(async () => {
     const parserKind = this.state.parserInput.parserKind;
-    const parserSpec = parserKind === "microgrammar" ?
-      MicrogrammarInput.parserSpec(
-        this.state.parserInput.parserKind,
-        this.state.parserInput.microgrammarInput) : { kind: parserKind };
+    const parserSpec = { kind: parserKind };
     const dataToParse: DataToParse = {
       parser: parserSpec,
       code: this.state.parserInput.code,

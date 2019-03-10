@@ -1,16 +1,7 @@
 import { TreeNode } from "@atomist/tree-path";
-import { MicrogrammarInputProps } from "./components/MicrogrammarInput";
 
-export type ParserKind = "Java9" | "Markdown" | "microgrammar";
-export type ParserSpec = MicrogrammarParserSpec | { kind: "Java9" | "Markdown" };
-
-export interface MicrogrammarParserSpec {
-    kind: "microgrammar";
-    microgrammarString: string;
-    matchName: string;
-    rootName: string;
-    terms: string;
-}
+export type ParserKind = "Java9" | "Markdown";
+export type ParserSpec = { kind: "Java9" | "Markdown" };
 
 interface HasPathExpression {
     pathExpression: string;
@@ -28,7 +19,6 @@ export type PathExpressionByParserKind = { [K in ParserKind]: string };
 
 export interface ParserInputProps {
     parserKind: ParserKind;
-    microgrammarInput: MicrogrammarInputProps;
     pathExpression: PathExpressionByParserKind;
     code: string;
 }
@@ -46,7 +36,6 @@ export interface TreeParseGUIState {
 
 export enum TreeChoices {
     ast = "parseThis",
-    // goal: microgrammarTerms = "mgTerms",
     parsingError = "error",
 }
 
@@ -58,7 +47,7 @@ export interface ErrorResponse {
     };
 }
 
-export type KnownErrorLocation = "path expression" | "code parse" | "microgrammar terms";
+export type KnownErrorLocation = "path expression" | "code parse";
 
 export type ParseResponse = { ast: AST } | ErrorResponse;
 
