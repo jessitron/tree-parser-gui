@@ -5,17 +5,6 @@ import { Java9FileParser } from "@atomist/antlr";
 import { InMemoryProject } from "@atomist/automation-client";
 import { findMatches } from "@atomist/automation-client/lib/tree/ast/astUtils";
 import { FileParser } from "@atomist/automation-client/lib/tree/ast/FileParser";
-import {
-  MicrogrammarBasedFileParser,
-} from "@atomist/automation-client/lib/tree/ast/microgrammar/MicrogrammarBasedFileParser";
-import {
-  isPatternMatch, Microgrammar,
-  microgrammar, optional, TermsDefinition,
-  zeroOrMore,
-} from "@atomist/microgrammar";
-import { regexLiteral } from "@atomist/microgrammar/lib/matchers/lang/cfamily/javascript/regexpLiteral";
-import { MatchFailureReport } from "@atomist/microgrammar/lib/MatchPrefixResult";
-import { DismatchReport } from "@atomist/microgrammar/lib/PatternMatch";
 import { RemarkFileParser } from "@atomist/sdm-pack-markdown";
 import { TreeNode } from "@atomist/tree-path";
 import express from "express";
@@ -120,17 +109,6 @@ function condenseSingleChild(tn: TreeNode) {
 
 function fromParserSpec(ps: ParserSpec): FileParser {
   switch (ps.kind) {
-    case "microgrammar":
-      console.log("Received mg string: " + ps.microgrammarString);
-      console.log("Received terms: " + ps.terms);
-
-      const terms = parseTerms(ps.terms);
-
-      const mg = microgrammar({
-        phrase: ps.microgrammarString, terms,
-      });
-
-      return new MicrogrammarBasedFileParser("root", ps.matchName, mg as Microgrammar<any>);
     case "Java9":
       return Java9FileParser;
     case "Markdown":
@@ -138,56 +116,10 @@ function fromParserSpec(ps: ParserSpec): FileParser {
   }
 }
 
-function parseTerms(input: string): TermsDefinition<any> {
-
-  const termGrammar = microgrammar({
-    phrase: `{ \${termses} }`, terms: {
-      termses: zeroOrMore(microgrammar({
-        phrase: `\${termName} : \${stringLiteral} \${possibleComma} `,
-        terms: {
-          possibleComma: optional(","),
-          stringLiteral: regexLiteral(),
-        },
-      })),
-    },
-  });
-
-  const match = termGrammar.exactMatch(input);
-
-  if (isPatternMatch(match)) {
-    // TODO: pay attention to the output
-    return {
-      first: /[a-zA-Z0-9]+/,
-      second: /[a-zA-Z0-9]+/,
-    };
-  }
-
-  throw new LocalizedError("microgrammar terms", match.description, mfrToTree(match));
-
-}
-
-function mfrToTree(report: DismatchReport): TreeNode {
-  const mfr = report as MatchFailureReport;
-
-  return {
-    $name: formatName(mfr),
-    $value: mfr.$matched,
-    $offset: mfr.$offset,
-    $children: (mfr.children || []).map(mfrToTree),
-  };
-}
-
-function formatName(m: MatchFailureReport): string {
-  let output = m.$matcherId;
-  if (m.cause) {
-    output += " cuz: " + m.cause;
-  }
-  return output;
-}
-
 class LocalizedError extends Error {
   constructor(public readonly where: KnownErrorLocation,
-              message: string, public readonly tree?: TreeNode) {
+    message: string,
+    public readonly tree?: TreeNode) {
     super(message);
   }
 }

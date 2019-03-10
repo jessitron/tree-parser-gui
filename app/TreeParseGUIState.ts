@@ -1,4 +1,3 @@
-import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { TreeNode } from "@atomist/tree-path";
 import { MicrogrammarInputProps } from "./components/MicrogrammarInput";
 
