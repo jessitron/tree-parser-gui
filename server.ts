@@ -13,6 +13,13 @@ import { AddressInfo } from "net";
 import { DataToParse, ErrorResponse, KnownErrorLocation, ParseResponse, ParserSpec } from "./app/TreeParseGUIState";
 import pj from "./package.json";
 
+// do things right
+process.on("uncaughtException", function(exception) {
+  console.log(exception); // to see your exception details in the console
+  // if you are on production, maybe you can send the exception details to your
+  // email as well ?
+});
+
 const app = express();
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("static"));
@@ -118,8 +125,8 @@ function fromParserSpec(ps: ParserSpec): FileParser {
 
 class LocalizedError extends Error {
   constructor(public readonly where: KnownErrorLocation,
-    message: string,
-    public readonly tree?: TreeNode) {
+              message: string,
+              public readonly tree?: TreeNode) {
     super(message);
   }
 }
